@@ -1,92 +1,121 @@
 @extends('admin.layouts.auth')
 
 @section('main-content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-xl-10 col-lg-12 col-md-9">
-            <div class="card o-hidden border-0 shadow-lg my-5">
-                <div class="card-body p-0">
-                    <div class="row">
-                        <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
-                        <div class="col-lg-6">
-                            <div class="p-5">
-                                <div class="text-center">
-                                    <h1 class="h4 text-gray-900 mb-4">{{ __('Login') }}</h1>
-                                </div>
+<div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="flex justify-center text-indigo-600">
+        <span class="text-4xl font-extrabold tracking-tight flex items-center gap-2">
+            <i class="fas fa-heart text-rose-500 animate-pulse"></i>
+            <span>Luiz-Wedding</span>
+        </span>
+    </div>
+    <h2 class="mt-6 text-center text-3xl font-bold text-slate-900 tracking-tight">Masuk ke Akun Anda</h2>
+    <p class="mt-2 text-center text-sm text-slate-600">
+        Atau
+        <a href="{{ route('register') }}" class="font-semibold text-indigo-600 hover:text-indigo-500 transition-colors">
+            daftar akun baru
+        </a>
+    </p>
+</div>
 
-                                @if ($errors->any())
-                                    <div class="alert alert-danger border-left-danger" role="alert">
-                                        <ul class="pl-4 my-2">
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                @endif
-
-                                <form method="POST" action="{{ route('login') }}" class="user">
-                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
-                                    <div class="form-group">
-                                        <input type="email" class="form-control form-control-user" name="email" placeholder="{{ __('E-Mail Address') }}" value="{{ old('email') }}" required autofocus>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <input type="password" class="form-control form-control-user" name="password" placeholder="{{ __('Password') }}" required>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="custom-control custom-checkbox small">
-                                            <input type="checkbox" class="custom-control-input" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                                            <label class="custom-control-label" for="remember">{{ __('Remember Me') }}</label>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <button type="submit" class="btn btn-primary btn-user btn-block">
-                                            {{ __('Login') }}
-                                        </button>
-                                    </div>
-
-                                    <hr>
-
-                                    <div class="form-group">
-                                        <button type="button" class="btn btn-github btn-user btn-block">
-                                            <i class="fab fa-github fa-fw"></i> {{ __('Login with GitHub') }}
-                                        </button>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <button type="button" class="btn btn-twitter btn-user btn-block">
-                                            <i class="fab fa-twitter fa-fw"></i> {{ __('Login with Twitter') }}
-                                        </button>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <button type="button" class="btn btn-facebook btn-user btn-block">
-                                            <i class="fab fa-facebook-f fa-fw"></i> {{ __('Login with Facebook') }}
-                                        </button>
-                                    </div>
-                                </form>
-
-                                <hr>
-
-                                @if (Route::has('password.request'))
-                                    <div class="text-center">
-                                        <a class="small" href="{{ route('password.request') }}">
-                                            {{ __('Forgot Password?') }}
-                                        </a>
-                                    </div>
-                                @endif
-
-                                @if (Route::has('register'))
-                                    <div class="text-center">
-                                        <a class="small" href="{{ route('register') }}">{{ __('Create an Account!') }}</a>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
+<div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="bg-white py-8 px-4 shadow-xl border border-slate-100 sm:rounded-2xl sm:px-10">
+        
+        @if ($errors->any())
+            <div class="mb-4 bg-rose-50 border-l-4 border-rose-500 p-4 rounded-r-lg" role="alert">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-exclamation-circle text-rose-500"></i>
                     </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-semibold text-rose-800">Terdapat beberapa kesalahan:</h3>
+                        <ul class="mt-2 list-disc list-inside text-sm text-rose-700 space-y-1">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('login') }}" class="space-y-6">
+            @csrf
+
+            <div>
+                <label for="email" class="block text-sm font-medium text-slate-700">Alamat Email</label>
+                <div class="mt-1 relative rounded-md shadow-sm">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <input id="email" name="email" type="email" autocomplete="email" required value="{{ old('email') }}" autofocus
+                        class="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all"
+                        placeholder="nama@email.com">
+                </div>
+            </div>
+
+            <div>
+                <label for="password" class="block text-sm font-medium text-slate-700">Password</label>
+                <div class="mt-1 relative rounded-md shadow-sm">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <input id="password" name="password" type="password" autocomplete="current-password" required
+                        class="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all"
+                        placeholder="••••••••">
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <input id="remember" name="remember" type="checkbox" {{ old('remember') ? 'checked' : '' }}
+                        class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-slate-300 rounded cursor-pointer">
+                    <label for="remember" class="ml-2 block text-sm text-slate-900 cursor-pointer">Ingat Saya</label>
+                </div>
+
+                @if (Route::has('password.request'))
+                    <div class="text-sm">
+                        <a href="{{ route('password.request') }}" class="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
+                            Lupa password?
+                        </a>
+                    </div>
+                @endif
+            </div>
+
+            <div>
+                <button type="submit"
+                    class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                    Masuk
+                </button>
+            </div>
+        </form>
+
+        <div class="mt-6">
+            <div class="relative">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-slate-200"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="px-2 bg-white text-slate-500">Atau masuk dengan</span>
+                </div>
+            </div>
+
+            <div class="mt-6 grid grid-cols-3 gap-3">
+                <div>
+                    <button type="button" class="w-full inline-flex justify-center py-2 px-4 border border-slate-200 rounded-lg bg-white text-sm font-medium text-slate-500 hover:bg-slate-50 transition-colors shadow-sm">
+                        <i class="fab fa-github text-lg"></i>
+                    </button>
+                </div>
+
+                <div>
+                    <button type="button" class="w-full inline-flex justify-center py-2 px-4 border border-slate-200 rounded-lg bg-white text-sm font-medium text-slate-500 hover:bg-slate-50 transition-colors shadow-sm">
+                        <i class="fab fa-twitter text-lg text-sky-400"></i>
+                    </button>
+                </div>
+
+                <div>
+                    <button type="button" class="w-full inline-flex justify-center py-2 px-4 border border-slate-200 rounded-lg bg-white text-sm font-medium text-slate-500 hover:bg-slate-50 transition-colors shadow-sm">
+                        <i class="fab fa-facebook text-lg text-blue-600"></i>
+                    </button>
                 </div>
             </div>
         </div>

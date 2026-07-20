@@ -70,6 +70,15 @@ class RegisterController extends Controller
             'last_name' => $data['last_name'],
             'email' => $data['email'],
             'password' => $data['password'],
+            'role' => 'user',
         ]);
+    }
+
+    protected function redirectTo()
+    {
+        if (auth()->user()->isUser()) {
+            return '/rental-info';
+        }
+        return $this->redirectTo;
     }
 }

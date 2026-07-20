@@ -21,16 +21,20 @@ class InfoController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nama_pengantin_istri' => 'required',
             'nama_pengantin_pria' => 'required',
             'tanggal_pernikahan' => 'required|date',
-            'waktu_acara' => 'required|date_format:H:i',
+            'mulai_akad' => 'required|date_format:H:i',
+            'selesai_akad' => 'required|date_format:H:i',
+            'mulai_resepsi' => 'required|date_format:H:i',
             'alamat' => 'required',
-            'deskripsi' => 'required'
+            'deskripsi' => 'required',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
         ]);
-
-        Info::create($request->all());
+        
+        Info::create($validated);
 
         return redirect()->route('info.index')->with('success', 'Info created successfully.');
     }
@@ -44,20 +48,26 @@ class InfoController extends Controller
 
     public function update(Request $request, Info $info)
     {
-        $request->validate([
-            'nama_pengantin_istri' => 'required|exists:infos,id',
-            'nama_pengantin_pria' => 'required|exists:infos,id',
+        $validated = $request->validate([
+            'nama_pengantin_istri' => 'required|string|max:255',
+            'nama_pengantin_pria' => 'required|string|max:255',
             'tanggal_pernikahan' => 'required|date',
-            'waktu_acara' => 'required|date_format:H:i',
-            'alamat' => 'required',
-            'deskripsi' => 'required'
+            'mulai_akad' => 'required|date_format:H:i',
+            'selesai_akad' => 'required|date_format:H:i',
+            'mulai_resepsi' => 'required|date_format:H:i',
+            'alamat' => 'required|string',
+            'deskripsi' => 'required|string',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
         ]);
 
+        $info->update($validated);
 
-        $info->update($request->all());
-
-        return redirect()->route('info.index')->with('success', 'Info updated successfully.');
+        return redirect()
+            ->route('info.index')
+            ->with('success', 'Info berhasil diperbarui.');
     }
+
 
     public function destroy(Info $info)
     {

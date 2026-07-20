@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Info;
 use App\Models\Gallery;
+use App\Models\Info;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class GalleryController extends Controller
 {
     public function index()
     {
-        $galeries = Gallery::all();
+        $galeries = Gallery::with(['images', 'pria', 'istri'])->get();
         return view('admin.gallery.index', compact('galeries'));
     }
 
@@ -23,24 +24,41 @@ class GalleryController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'id_nama_pengantin_istri' => 'required|exists:infos,id',
             'id_nama_pengantin_pria' => 'required|exists:infos,id',
-            'gambar' => 'nullable|image|max:2048',
-            'deskripsi' => 'required'
+            'deskripsi' => 'required',
+            'images.*' => 'image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
+        DB::beginTransaction();
 
-         // Inisialisasi data yang akan disimpan
-         $data = $request->all();
+        try {
+            $gallery = Gallery::create([
+                'id_nama_pengantin_istri' => $request->id_nama_pengantin_istri,
+                'id_nama_pengantin_pria' => $request->id_nama_pengantin_pria,
+                'deskripsi' => $request->deskripsi,
+            ]);
 
-         if ($request->hasFile('gambar')) {
-             $data['gambar'] = $request->file('gambar')->store('galeries', 'public');
-         }
+            // upload multiple
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $file) {
+                    $path = $file->store('galeries', 'public');
 
-        Gallery::create($data);
+                    $gallery->images()->create([
+                        'path' => $path
+                    ]);
+                }
+            }
 
-        return redirect()->route('gallery.index')->with('success', 'Gallery created successfully.');
+            DB::commit();
+
+            return redirect()->route('gallery.index')->with('success', 'Gallery berhasil dibuat');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     // public function show(Gallery $gallery)
@@ -56,32 +74,66 @@ class GalleryController extends Controller
 
     public function update(Request $request, Gallery $gallery)
     {
-        $request->validate([
+        $validated = $request->validate([
             'id_nama_pengantin_istri' => 'required|exists:infos,id',
             'id_nama_pengantin_pria' => 'required|exists:infos,id',
-            'gambar' => 'nullable|image|max:2048',
-            'deskripsi' => 'required'
+            'deskripsi' => 'required',
+            'images.*' => 'image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
-        $data = $request->all();
+        DB::beginTransaction();
 
-        if ($request->hasFile('gambar')) {
-            // Hapus gambar lama jika ada
-            if ($gallery->gambar) {
-                Storage::disk('public')->delete($gallery->gambar);
+        try {
+            // update data utama
+            $gallery->update([
+                'id_nama_pengantin_istri' => $request->id_nama_pengantin_istri,
+                'id_nama_pengantin_pria' => $request->id_nama_pengantin_pria,
+                'deskripsi' => $request->deskripsi,
+            ]);
+
+            // jika ada upload gambar baru → tambah (bukan replace)
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $file) {
+                    $path = $file->store('galeries', 'public');
+
+                    $gallery->images()->create([
+                        'path' => $path
+                    ]);
+                }
             }
-            $data['gambar'] = $request->file('gambar')->store('galeries', 'public');
+
+            DB::commit();
+
+            return redirect()->route('gallery.index')->with('success', 'Gallery berhasil diupdate');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
         }
-
-        $gallery->update($request->all());
-
-        return redirect()->route('gallery.index')->with('success', 'Gallery updated successfully.');
     }
 
     public function destroy(Gallery $gallery)
     {
-        $gallery->delete();
+        DB::beginTransaction();
 
-        return redirect()->route('gallery.index')->with('success', 'Gallery deleted successfully.');
+        try {
+            // hapus semua file gambar
+            foreach ($gallery->images as $image) {
+                if ($image->path && Storage::exists('public/' . $image->path)) {
+                    Storage::delete('public/' . $image->path);
+                }
+            }
+
+            // hapus gallery (images ikut kehapus kalau pakai cascade)
+            $gallery->delete();
+
+            DB::commit();
+
+            return redirect()->route('gallery.index')->with('success', 'Gallery berhasil dihapus');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
+        }
     }
 }

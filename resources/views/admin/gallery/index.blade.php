@@ -43,12 +43,9 @@
                                 <td>{{ $gallery->infoIstri->nama_pengantin_istri ?? 'No Data' }}</td>
                                 <td>{{ $gallery->infoPria->nama_pengantin_pria ?? 'No Data' }}</td>
                                 <td>
-                                    @if ($gallery->gambar)
-                                        <img src="{{ asset('storage/' . $gallery->gambar) }}" alt="Gallery Image"
-                                            width="100">
-                                    @else
-                                        No Image
-                                    @endif
+                                    @foreach ($gallery->images as $img)
+                                        <img src="{{ asset('storage/' . $img->path) }}" width="100">
+                                    @endforeach
                                 </td>
                                 <td>{{ $gallery->deskripsi }}</td>
                                 <td>

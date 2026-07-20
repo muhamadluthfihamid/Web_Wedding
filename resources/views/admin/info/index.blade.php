@@ -2,129 +2,153 @@
 
 @section('main-content')
     <!-- Page Heading -->
-    <h1 class="h3 mb-4 text-gray-800">{{ __('Info') }}</h1>
-    <div class="col-lg-12 mb-4">
-        <div class="d-flex justify-content-end mx-4">
-            <a class="btn btn-primary" href="{{ route('info.create') }}" title="Create" role="button"><ion-icon
-                    name="add-outline" size="small"></ion-icon></a>
+    <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Info Pernikahan</h1>
+            <p class="text-sm text-slate-500 mt-1">Kelola data dasar pernikahan, waktu acara, dan peta lokasi</p>
         </div>
+        @if($infos->isEmpty())
+            <div class="flex-shrink-0">
+                <a class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors" 
+                   href="{{ route('info.create') }}" title="Tambah Info" role="button">
+                    <i class="fas fa-plus"></i> Tambah Info
+                </a>
+            </div>
+        @endif
     </div>
-    <div class="row justify-content-center">
-        <div class="col-lg-12">
-            <div class="card card-body shadow mb-4">
-                {{-- <table class="table table-striped-column">
-                <thead>
-                    <tr class="text-center">
-                        <th scope="col">No.</th>
-                        <th scope="col">Pengantin Pria</th>
-                        <th scope="col">Pengantin Wanita</th>
-                        <th scope="col">Tanggal</th>
-                        <th scope="col">Waktu Acara</th>
-                        <th scope="col">Alamat</th>
-                        <th scope="col">Deskripsi</th>
-                        <th scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($infos as $index => $info)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $info->nama_pengantin_istri }}</td>
-                            <td>{{ $info->nama_pengantin_pria }}</td>
-                            <td>{{ $info->tanggal_pernikahan }}</td>
-                            <td>{{ $info->waktu_acara }}</td>
-                            <td>{{ $info->alamat }}</td>
-                            <td>{{ $info->deskripsi }}</td>
-                            <td>
-                                {{-- <a href="{{ route('gifts.show', $gift->id) }}" class="btn btn-info">Show</a> --}}
-                {{-- <div class="d-flex gap-2">
-                                    <a href="{{ route('info.edit', $info->id) }}" class="btn btn-warning mx-2">Edit</a>
-                                    <button class="btn btn-danger" onclick="confirmDelete({{ $info->id }})">
-                                        Delete
-                                    </button>
-                                    <form id="delete-form-{{ $info->id }}"
-                                        action="{{ route('info.destroy', $info->id) }}" method="POST"
-                                        style="display: none;">
-                                        @csrf
-                                        @method('DELETE')
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table> --}}
-                @if ($infos->isEmpty())
-                    <div class="alert alert-info" role="alert">
-                        Tidak ada data disini!!!
-                    </div>
-                @else
-                    @foreach ($infos as $info)
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="nama_pengantin_pria">Pengantin Pria:</label>
-                                    <input type="text" class="form-control" id="nama_pengantin_pria"
-                                        name="nama_pengantin_pria" value="{{ $info->nama_pengantin_pria }}" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label for="nama_pengantin_istri">Pengantin Wanita:</label>
-                                    <input type="text" class="form-control" id="nama_pengantin_istri"
-                                        name="nama_pengantin_istri" value="{{ $info->nama_pengantin_istri }}" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label for="alamat">Alamat:</label>
-                                    <textarea class="form-control" id="alamat" name="alamat" disabled>{{ $info->alamat }}</textarea>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="waktu_acara">Waktu Acara:</label>
-                                    <input type="time" class="form-control" id="waktu_acara" name="waktu_acara"
-                                        value="{{ $info->waktu_acara }}" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label for="tanggal_pernikahan">Tanggal:</label>
-                                    <input type="date" class="form-control" id="tanggal_pernikahan"
-                                        name="tanggal_pernikahan" value="{{ $info->tanggal_pernikahan }}" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label for="deskripsi">Deskripsi:</label>
-                                    <textarea class="form-control" id="deskripsi" name="deskripsi" disabled>{{ $info->deskripsi }}</textarea>
-                                </div>
 
+    @if ($infos->isEmpty())
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-12 text-center space-y-4">
+            <div class="inline-flex items-center justify-center p-4 bg-indigo-50 text-indigo-600 rounded-full shadow-inner">
+                <i class="fas fa-info-circle text-4xl"></i>
+            </div>
+            <div class="space-y-1">
+                <h3 class="text-lg font-bold text-slate-950">Belum Ada Informasi Acara</h3>
+                <p class="text-sm text-slate-500 max-w-sm mx-auto">Tambahkan tanggal pernikahan, waktu akad/resepsi, dan peta lokasi agar tamu undangan mengetahuinya.</p>
+            </div>
+            <a class="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors" 
+               href="{{ route('info.create') }}">
+                <i class="fas fa-plus"></i> Tambah Info Acara
+            </a>
+        </div>
+    @else
+        @foreach ($infos as $info)
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden mb-8">
+                <div class="px-6 py-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <h3 class="text-lg font-bold text-slate-900">Detail Informasi Pernikahan</h3>
+                    <div class="flex items-center gap-2">
+                        <a href="{{ route('info.edit', $info->id) }}" 
+                           class="inline-flex items-center gap-1.5 px-4 py-2 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg text-sm font-semibold transition-colors">
+                            <i class="fas fa-edit"></i> Edit Info
+                        </a>
+                        <button class="inline-flex items-center gap-1.5 px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg text-sm font-semibold transition-colors" 
+                                onclick="confirmDelete({{ $info->id }})">
+                            <i class="fas fa-trash"></i> Hapus
+                        </button>
+                        <form id="delete-form-{{ $info->id }}" action="{{ route('info.destroy', $info->id) }}"
+                            method="POST" class="hidden">
+                            @csrf
+                            @method('DELETE')
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Kolom Kiri: Nama & Tanggal -->
+                    <div class="space-y-6">
+                        <div class="bg-slate-50/50 p-5 rounded-2xl border border-slate-100 space-y-4">
+                            <h4 class="text-sm font-bold text-slate-500 uppercase tracking-wider">Pengantin</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <span class="text-xs text-slate-400 block font-semibold">Pengantin Pria:</span>
+                                    <span class="text-base font-bold text-slate-900 block mt-0.5">{{ $info->nama_pengantin_pria }}</span>
+                                </div>
+                                <div>
+                                    <span class="text-xs text-slate-400 block font-semibold">Pengantin Wanita:</span>
+                                    <span class="text-base font-bold text-slate-900 block mt-0.5">{{ $info->nama_pengantin_istri }}</span>
+                                </div>
                             </div>
-                            <div class="d-flex mx-1">
-                                <a href="{{ route('info.edit', $info->id) }}" class="btn btn-warning mx-2">Edit</a>
-                                <button class="btn btn-danger" onclick="confirmDelete({{ $info->id }})">
-                                    Delete
-                                </button>
-                                <form id="delete-form-{{ $info->id }}" action="{{ route('info.destroy', $info->id) }}"
-                                    method="POST" style="display: none;">
-                                    @csrf
-                                    @method('DELETE')
-                                </form>
+                            
+                            <hr class="border-slate-100">
+
+                            <div>
+                                <span class="text-xs text-slate-400 block font-semibold">Tanggal Pernikahan:</span>
+                                <span class="text-base font-bold text-slate-900 block mt-0.5">
+                                    <i class="far fa-calendar-alt text-indigo-500 mr-1.5"></i>
+                                    {{ \Carbon\Carbon::parse($info->tanggal_pernikahan)->translatedFormat('d F Y') }}
+                                </span>
                             </div>
                         </div>
-                    @endforeach
-                @endif
+
+                        <div class="bg-slate-50/50 p-5 rounded-2xl border border-slate-100 space-y-3">
+                            <h4 class="text-sm font-bold text-slate-500 uppercase tracking-wider">Alamat & Lokasi</h4>
+                            <div>
+                                <span class="text-xs text-slate-400 block font-semibold font-semibold">Alamat Acara:</span>
+                                <span class="text-sm text-slate-700 block mt-1 leading-relaxed">{{ $info->alamat }}</span>
+                            </div>
+                            
+                            @if($info->deskripsi)
+                                <div class="pt-2 border-t border-slate-100">
+                                    <span class="text-xs text-slate-400 block font-semibold">Deskripsi / Catatan Tambahan:</span>
+                                    <span class="text-sm text-slate-600 block mt-1">{{ $info->deskripsi }}</span>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Kolom Kanan: Waktu & Peta -->
+                    <div class="space-y-6">
+                        <div class="bg-slate-50/50 p-5 rounded-2xl border border-slate-100 space-y-4">
+                            <h4 class="text-sm font-bold text-slate-500 uppercase tracking-wider">Detail Waktu</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="bg-white p-3.5 rounded-xl border border-slate-100 shadow-inner">
+                                    <span class="text-xs text-slate-400 block font-bold uppercase tracking-wider">Mulai Akad</span>
+                                    <span class="text-lg font-extrabold text-slate-900 block mt-1"><i class="far fa-clock text-indigo-500 mr-1.5"></i>{{ $info->mulai_akad }}</span>
+                                </div>
+                                <div class="bg-white p-3.5 rounded-xl border border-slate-100 shadow-inner">
+                                    <span class="text-xs text-slate-400 block font-bold uppercase tracking-wider">Selesai Akad</span>
+                                    <span class="text-lg font-extrabold text-slate-900 block mt-1"><i class="far fa-clock text-indigo-500 mr-1.5"></i>{{ $info->selesai_akad }}</span>
+                                </div>
+                            </div>
+                            <div class="bg-indigo-50/30 p-3.5 rounded-xl border border-indigo-100">
+                                <span class="text-xs text-indigo-700 block font-bold uppercase tracking-wider">Mulai Resepsi</span>
+                                <span class="text-lg font-extrabold text-indigo-950 block mt-1"><i class="far fa-clock text-indigo-600 mr-1.5"></i>{{ $info->mulai_resepsi }}</span>
+                            </div>
+                        </div>
+
+                        @if($info->latitude && $info->longitude)
+                            <div class="bg-slate-50/50 p-5 rounded-2xl border border-slate-100 space-y-4">
+                                <h4 class="text-sm font-bold text-slate-500 uppercase tracking-wider">Peta Lokasi</h4>
+                                <div class="rounded-xl overflow-hidden border border-slate-200 shadow-inner">
+                                    <iframe width="100%" height="220" style="border:0;" loading="lazy" allowfullscreen
+                                        src="https://maps.google.com/maps?q={{ $info->latitude }},{{ $info->longitude }}&z=15&output=embed">
+                                    </iframe>
+                                </div>
+                                <a class="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2 border border-slate-200 rounded-lg text-sm font-semibold text-indigo-700 bg-white hover:bg-slate-50 transition-colors shadow-sm"
+                                    href="https://www.google.com/maps/search/?api=1&query={{ $info->latitude }},{{ $info->longitude }}"
+                                    target="_blank">
+                                    <i class="fas fa-map-marker-alt"></i> Buka di Google Maps
+                                </a>
+                            </div>
+                        @endif
+                    </div>
+                </div>
             </div>
-
-        </div>
-
-    </div>
+        @endforeach
+    @endif
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function confirmDelete(id) {
             Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                title: 'Apakah Anda yakin?',
+                text: "Data informasi pernikahan ini akan dihapus secara permanen!",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
                     document.getElementById('delete-form-' + id).submit();

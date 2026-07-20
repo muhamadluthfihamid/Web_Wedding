@@ -20,23 +20,36 @@ class BiodataWanitaController extends Controller
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'ibu' => 'required|string|max:255',
             'bapak' => 'required|string|max:255',
-            'foto' => 'nullable|image|max:2048',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'deskripsi' => 'required|string',
+            'asal' => 'nullable|string|max:255',
         ]);
 
-        $biodataWanita = new BiodataWanita($validatedData);
+        $biodataWanita = new BiodataWanita();
+        $biodataWanita->nama = $validated['nama'];
+        $biodataWanita->ibu = $validated['ibu'];
+        $biodataWanita->bapak = $validated['bapak'];
+        $biodataWanita->deskripsi = $validated['deskripsi'];
+        $biodataWanita->asal = $validated['asal'] ?? null;
+
 
         if ($request->hasFile('foto')) {
             $biodataWanita->foto = $request->file('foto')->store('foto_wanita', 'public');
         }
+        // dd([
+//     'hasFile' => $request->hasFile('foto'),
+//     'file' => $request->file('foto'),
+//     'isValid' => $request->file('foto')?->isValid(),
+//     'realPath' => $request->file('foto')?->getRealPath(),
+// ]);
 
         $biodataWanita->save();
 
-        return redirect()->route('biodataWanita.index')->with('success', 'Biodata Wanita berhasil ditambahkan.');
+        return redirect()->route('biodataWanita.index')->with('success', 'Biodata pria berhasil ditambahkan.');
     }
 
     public function show(BiodataWanita $biodataWanita)
@@ -55,8 +68,9 @@ class BiodataWanitaController extends Controller
             'nama' => 'required|string|max:255',
             'ibu' => 'required|string|max:255',
             'bapak' => 'required|string|max:255',
-            'foto' => 'nullable|image|max:2048',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'deskripsi' => 'required|string',
+            'asal' => 'nullable|string|max:255',
         ]);
 
         $biodataWanita->fill($validatedData);

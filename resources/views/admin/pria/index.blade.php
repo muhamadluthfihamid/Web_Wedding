@@ -2,89 +2,115 @@
 
 @section('main-content')
     <!-- Page Heading -->
-    <h1 class="h3 mb-4 text-gray-800">{{ __('Biodata Pria') }}</h1>
-    <div class="col-lg-12 mb-4">
-        <div class="d-flex justify-content-end mx-4">
-            <a class="btn btn-primary" href="{{ route('biodataPria.create') }}" title="Create" role="button"><ion-icon
-                    name="add-outline" size="small"></ion-icon></a>
+    <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Biodata Pengantin Pria</h1>
+            <p class="text-sm text-slate-500 mt-1">Kelola data profil lengkap pengantin pria</p>
         </div>
+        @if ($biodataPria->isEmpty())
+            <div class="flex-shrink-0">
+                <a class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors" 
+                   href="{{ route('biodataPria.create') }}" title="Tambah Biodata" role="button">
+                    <i class="fas fa-plus"></i> Tambah Biodata
+                </a>
+            </div>
+        @endif
     </div>
-    <div class="row justify-content-center">
 
-        <div class="col-lg-12">
-            <div class="card card-body shadow mb-4">
-                @if ($biodataPria->isEmpty())
-                    <div class="alert alert-info" role="alert">
-                        Tidak ada data disini!!!
-                    </div>
-                @else
-                    @foreach ($biodataPria as $pria)
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="nama">Nama:</label>
-                                    <input type="text" class="form-control" id="nama" name="nama"
-                                        value="{{ $pria->nama }}" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label for="ibu">Ibu:</label>
-                                    <input type="text" class="form-control" id="ibu" name="ibu"
-                                        value="{{ $pria->ibu }}" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label for="foto">Foto: </label>
-
-                                    <div class="card card-body my-2 shadow">
-                                        <img src="{{ asset('storage/' . $pria->foto) }}" alt="Foto" width="30%"
-                                            class="d-flex ">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="bapak">Bapak:</label>
-                                    <input class="form-control" id="bapak" name="bapak" disabled
-                                        value="{{ $pria->bapak }}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="deskripsi">Deskripsi:</label>
-                                    <textarea class="form-control" id="deskripsi" name="deskripsi" disabled>{{ $pria->deskripsi }}</textarea>
-                                </div>
-
-                            </div>
-
-                        </div>
-                        <div class="d-flex justify-content-end mx-4 mb-2">
-                            <a href="{{ route('biodataPria.edit', $pria->id) }}" class="btn btn-warning mx-2">Edit</a>
-                            <button class="btn btn-danger" onclick="confirmDelete({{ $pria->id }})">
-                                Delete
+    @if ($biodataPria->isEmpty())
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-12 text-center space-y-4">
+            <div class="inline-flex items-center justify-center p-4 bg-indigo-50 text-indigo-600 rounded-full shadow-inner">
+                <i class="fas fa-user-circle text-4xl"></i>
+            </div>
+            <div class="space-y-1">
+                <h3 class="text-lg font-bold text-slate-950">Belum Ada Biodata Pria</h3>
+                <p class="text-sm text-slate-500 max-w-sm mx-auto">Tambahkan informasi nama pengantin pria, orang tua, deskripsi singkat, dan foto.</p>
+            </div>
+            <a class="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors" 
+               href="{{ route('biodataPria.create') }}">
+                <i class="fas fa-plus"></i> Tambah Biodata Pria
+            </a>
+        @else
+            @foreach ($biodataPria as $pria)
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden mb-8 max-w-3xl">
+                    <div class="px-6 py-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <h3 class="text-lg font-bold text-slate-900">Profil Pengantin Pria</h3>
+                        <div class="flex items-center gap-2">
+                            <a href="{{ route('biodataPria.edit', $pria->id) }}" 
+                               class="inline-flex items-center gap-1.5 px-4 py-2 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg text-sm font-semibold transition-colors">
+                                <i class="fas fa-edit"></i> Edit Profil
+                            </a>
+                            <button class="inline-flex items-center gap-1.5 px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg text-sm font-semibold transition-colors" 
+                                    onclick="confirmDelete({{ $pria->id }})">
+                                <i class="fas fa-trash"></i> Hapus
                             </button>
-                            <form id="delete-form-{{ $pria->id }}"
-                                action="{{ route('biodataPria.destroy', $pria->id) }}" method="POST"
-                                style="display: none;">
+                            <form id="delete-form-{{ $pria->id }}" action="{{ route('biodataPria.destroy', $pria->id) }}"
+                                method="POST" class="hidden">
                                 @csrf
                                 @method('DELETE')
                             </form>
                         </div>
-                    @endforeach
-                @endif
+                    </div>
 
-            </div>
-        </div>
+                    <div class="p-6 flex flex-col sm:flex-row gap-8 items-start">
+                        <!-- Foto Profil -->
+                        <div class="w-full sm:w-1/3 flex flex-col items-center">
+                            @if($pria->foto)
+                                <img src="{{ asset('storage/' . $pria->foto) }}" alt="Foto Pria" class="w-48 h-48 rounded-2xl object-cover border-4 border-slate-50 shadow-md">
+                            @else
+                                <div class="w-48 h-48 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-4xl border border-slate-100 shadow-inner">
+                                    {{ strtoupper(substr($pria->nama, 0, 1)) }}
+                                </div>
+                            @endif
+                        </div>
 
-    </div>
+                        <!-- Data Informasi -->
+                        <div class="flex-1 space-y-4 w-full">
+                            <div>
+                                <span class="text-xs text-slate-400 font-bold uppercase tracking-wider block">Nama Lengkap:</span>
+                                <span class="text-xl font-bold text-slate-900 block mt-0.5">{{ $pria->nama }}</span>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4 pt-2 border-t border-slate-50">
+                                <div>
+                                    <span class="text-xs text-slate-400 font-semibold block">Nama Ayah (Bapak):</span>
+                                    <span class="text-sm font-bold text-slate-800 block mt-0.5">{{ $pria->bapak }}</span>
+                                </div>
+                                <div>
+                                    <span class="text-xs text-slate-400 font-semibold block">Nama Ibu:</span>
+                                    <span class="text-sm font-bold text-slate-800 block mt-0.5">{{ $pria->ibu }}</span>
+                                </div>
+                            </div>
+
+                            <div class="pt-2 border-t border-slate-50">
+                                <span class="text-xs text-slate-400 font-semibold block">Asal / Lokasi:</span>
+                                <span class="text-sm font-bold text-slate-800 block mt-0.5">{{ $pria->asal ?? '-' }}</span>
+                            </div>
+
+                            @if($pria->deskripsi)
+                                <div class="pt-2 border-t border-slate-50">
+                                    <span class="text-xs text-slate-400 font-semibold block">Deskripsi Singkat:</span>
+                                    <p class="text-sm text-slate-600 mt-1 leading-relaxed">{{ $pria->deskripsi }}</p>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        @endif
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function confirmDelete(id) {
             Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                title: 'Apakah Anda yakin?',
+                text: "Data profil pengantin pria ini akan dihapus secara permanen!",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
                     document.getElementById('delete-form-' + id).submit();
@@ -93,43 +119,3 @@
         }
     </script>
 @endsection
-{{--
-@extends('layouts.app')
-
-@section('content')
-    <div class="container">
-        <h1>Daftar Biodata Pria</h1>
-        <a href="{{ route('biodataPria.create') }}" class="btn btn-primary">Tambah Biodata Pria</a>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Nama</th>
-                    <th>Ibu</th>
-                    <th>Bapak</th>
-                    <th>Deskripsi</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($biodataPria as $pria)
-                    <tr>
-                        <td>{{ $pria->nama }}</td>
-                        <td>{{ $pria->ibu }}</td>
-                        <td>{{ $pria->bapak }}</td>
-                        <td>{{ $pria->deskripsi }}</td>
-                        <td>
-                            <a href="{{ route('biodata_pria.show', $pria) }}" class="btn btn-info">Lihat</a>
-                            <a href="{{ route('biodata_pria.edit', $pria) }}" class="btn btn-warning">Edit</a>
-                            <form action="{{ route('biodata_pria.destroy', $pria) }}" method="POST"
-                                style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Hapus</button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-@endsection --}}

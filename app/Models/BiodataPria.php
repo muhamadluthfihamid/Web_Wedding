@@ -13,6 +13,7 @@ class BiodataPria extends Model
         'ibu',
         'bapak',
         'foto',
-        'deskripsi'
+        'deskripsi',
+        'asal'
     ];
 }

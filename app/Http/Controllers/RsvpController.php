@@ -20,15 +20,33 @@ class RsvpController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'nama_tamu' => 'required',
-            'jumlah' => 'required|integer',
-            'kehadiran' => 'required|boolean'
-        ]);
+        $rules = [
+            'nama_tamu' => 'required|string|max:255',
+            'jumlah' => 'required|integer|min:1',
+            'kehadiran' => 'required|in:1,0,true,false,Hadir,Tidak Hadir'
+        ];
 
-        Rsvp::create($request->all());
+        $data = $request->all();
+        if (isset($data['kehadiran'])) {
+            if ($data['kehadiran'] === 'Hadir' || $data['kehadiran'] === '1' || $data['kehadiran'] === 1 || $data['kehadiran'] === 'true') {
+                $data['kehadiran'] = true;
+            } else {
+                $data['kehadiran'] = false;
+            }
+        }
 
-        return redirect()->route('rsvp.index')->with('success', 'Rspv created successfully.');
+        $validated = validator($data, $rules)->validate();
+
+        $rsvp = Rsvp::create($validated);
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Konfirmasi kehadiran berhasil dikirim!'
+            ]);
+        }
+
+        return redirect()->route('rsvp.index')->with('success', 'Rsvp created successfully.');
     }
 
     // public function show(Rsvp $rsvp)
@@ -43,15 +61,26 @@ class RsvpController extends Controller
 
     public function update(Request $request, Rsvp $rsvp)
     {
-        $request->validate([
-            'nama_tamu' => 'required',
-            'jumlah' => 'required|integer',
-            'kehadiran' => 'required|boolean'
-        ]);
+        $rules = [
+            'nama_tamu' => 'required|string|max:255',
+            'jumlah' => 'required|integer|min:1',
+            'kehadiran' => 'required|in:1,0,true,false,Hadir,Tidak Hadir'
+        ];
 
-        $rsvp->update($request->all());
+        $data = $request->all();
+        if (isset($data['kehadiran'])) {
+            if ($data['kehadiran'] === 'Hadir' || $data['kehadiran'] === '1' || $data['kehadiran'] === 1 || $data['kehadiran'] === 'true') {
+                $data['kehadiran'] = true;
+            } else {
+                $data['kehadiran'] = false;
+            }
+        }
 
-        return redirect()->route('rsvp.index')->with('success', 'Rspv updated successfully.');
+        $validated = validator($data, $rules)->validate();
+
+        $rsvp->update($validated);
+
+        return redirect()->route('rsvp.index')->with('success', 'Rsvp updated successfully.');
     }
 
     public function destroy(Rsvp $rsvp)

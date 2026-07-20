@@ -10,9 +10,18 @@ class Story extends Model
     use HasFactory;
 
     protected $fillable = [
-        'judul',
         'deskripsi',
-        'tanggal',
-        'gambar',
+        'judul_bertemu',
+        'tgl_bertemu',
+        'note_bertemu',
+        'foto_bertemu',
+        'judul_serius',
+        'tgl_serius',
+        'note_serius',
+        'foto_serius',
+        'judul_tunangan',
+        'tgl_tunangan',
+        'note_tunangan',
+        'foto_tunangan'
     ];
 }

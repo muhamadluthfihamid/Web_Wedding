@@ -10,8 +10,8 @@ class StoryController extends Controller
 {
     public function index()
     {
-        $stories = Story::all();
-        return view('admin.story.index', compact('stories'));
+        $story = Story::latest()->first();
+        return view('admin.story.index', compact('story'));
     }
 
     public function create()
@@ -21,17 +21,37 @@ class StoryController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'judul' => 'required',
+        $validated = $request->validate([
             'deskripsi' => 'required',
-            'tanggal' => 'required|date',
-            'gambar' => 'nullable|image',
+            'judul_bertemu' => 'required',
+            'tgl_bertemu' => 'required|date',
+            'note_bertemu' => 'required',
+            'foto_bertemu' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'judul_serius' => 'required',
+            'tgl_serius' => 'required|date',
+            'note_serius' => 'required',
+            'foto_serius' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'judul_tunangan' => 'required',
+            'tgl_tunangan' => 'required|date',
+            'note_tunangan' => 'required',
+            'foto_tunangan' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $data = $request->all();
+        $data = $validated;
 
-        if ($request->hasFile('gambar')) {
-            $data['gambar'] = $request->file('gambar')->store('stories', 'public');
+        // Upload foto bertemu
+        if ($request->hasFile('foto_bertemu')) {
+            $data['foto_bertemu'] = $request->file('foto_bertemu')->store('stories', 'public');
+        }
+
+        // Upload foto serius
+        if ($request->hasFile('foto_serius')) {
+            $data['foto_serius'] = $request->file('foto_serius')->store('stories', 'public');
+        }
+
+        // Upload foto tunangan
+        if ($request->hasFile('foto_tunangan')) {
+            $data['foto_tunangan'] = $request->file('foto_tunangan')->store('stories', 'public');
         }
 
         Story::create($data);
@@ -46,39 +66,78 @@ class StoryController extends Controller
         return view('admin.story.edit', compact('story'));
     }
 
-    public function update(Request $request, Story $story)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'judul' => 'required',
+        $story = Story::findOrFail($id);
+
+        $validated = $request->validate([
             'deskripsi' => 'required',
-            'tanggal' => 'required|date',
-            'gambar' => 'nullable|image',
+
+            'judul_bertemu' => 'required',
+            'tgl_bertemu' => 'required|date',
+            'note_bertemu' => 'required',
+            'foto_bertemu' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+
+            'judul_serius' => 'required',
+            'tgl_serius' => 'required|date',
+            'note_serius' => 'required',
+            'foto_serius' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+
+            'judul_tunangan' => 'required',
+            'tgl_tunangan' => 'required|date',
+            'note_tunangan' => 'required',
+            'foto_tunangan' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $data = $request->all();
+        $data = $validated;
 
-        if ($request->hasFile('gambar')) {
-            // Hapus gambar lama jika ada
-            if ($story->gambar) {
-                Storage::disk('public')->delete($story->gambar);
+        // helper function biar tidak duplikat kode
+        $handleUpload = function ($field) use ($request, $story, &$data) {
+            if ($request->hasFile($field)) {
+
+                // hapus file lama
+                if ($story->$field && Storage::disk('public')->exists($story->$field)) {
+                    Storage::disk('public')->delete($story->$field);
+                }
+
+                // simpan file baru
+                $data[$field] = $request->file($field)->store('stories', 'public');
             }
-            $data['gambar'] = $request->file('gambar')->store('stories', 'public');
-        }
+        };
+
+        // panggil untuk masing-masing field
+        $handleUpload('foto_bertemu');
+        $handleUpload('foto_serius');
+        $handleUpload('foto_tunangan');
 
         $story->update($data);
 
-        return redirect()->route('story.index')->with('success', 'Story updated successfully.');
+        return redirect()->route('story.index')
+            ->with('success', 'Story berhasil diupdate');
     }
 
-    public function destroy(Story $story)
+    public function destroy($id)
     {
-        // Hapus gambar dari storage jika ada
-        if ($story->gambar) {
-            Storage::disk('public')->delete($story->gambar);
+        $story = Story::findOrFail($id);
+
+        // Hapus foto bertemu
+        if ($story->foto_bertemu && Storage::exists('public/' . $story->foto_bertemu)) {
+            Storage::delete('public/' . $story->foto_bertemu);
         }
 
+        // Hapus foto serius
+        if ($story->foto_serius && Storage::exists('public/' . $story->foto_serius)) {
+            Storage::delete('public/' . $story->foto_serius);
+        }
+
+        // Hapus foto tunangan
+        if ($story->foto_tunangan && Storage::exists('public/' . $story->foto_tunangan)) {
+            Storage::delete('public/' . $story->foto_tunangan);
+        }
+
+        // Hapus data dari database
         $story->delete();
 
-        return redirect()->route('story.index')->with('success', 'Story deleted successfully.');
+        return redirect()->route('story.index')->with('success', 'Story berhasil dihapus');
     }
 }

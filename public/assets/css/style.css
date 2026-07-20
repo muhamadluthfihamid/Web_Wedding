@@ -1,508 +1,1428 @@
+/* ==========================================================================
+   Modern Premium Wedding Theme: Sage, Cream & Gold
+   ========================================================================== */
+
 :root {
-    --pink: #f14e95;
-    --bg: #0a0a0a;
-    --shadow: 0 2px 2px rgb(0 0 0 / 0.5);
-  }
+    --sage-dark: #3e4b6d;      /* Primary dark blue */
+    --sage-medium: #586b8c;    /* Medium blue */
+    --sage-light: #8ca4d0;     /* Light blue */
+    --sage-ultra-light: #f0f4fa; /* Ultra light blue background tint */
+    --cream-bg: #f8fafc;       /* Bright light slate background */
+    --cream-accent: #ffffff;   /* Pure white cards */
+    --gold: #b39247;           /* Elegant gold */
+    --gold-light: #dfcaa0;     /* Light gold */
+    --gold-gradient: linear-gradient(135deg, #3e4b6d 0%, #586b8c 100%); /* Premium blue gradient */
+    --dark-overlay: rgba(37, 46, 69, 0.5); /* Overlay color matching the theme */
+    --shadow-premium: 0 15px 35px rgba(62, 75, 109, 0.08), 0 5px 15px rgba(0, 0, 0, 0.03);
+    --shadow-soft: 0 8px 25px rgba(0, 0, 0, 0.02);
+    --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
-  body {
-    font-size: 1.2rem;
-    font-family: 'Work Sans', sans-serif;
-    min-height: 4000px;
-  }
+/* Base resets and typography */
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
 
-  .hero::before {
-    content: '';
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-size: 1.1rem;
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--cream-bg);
+    color: #4a4a4a;
+    background-image: url('../img/flower-bg.png');
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--cream-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--sage-medium);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--sage-dark);
+}
+
+/* Typography elements */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.sacramento {
+    font-family: 'Playfair Display', serif;
+    color: var(--sage-dark);
+}
+
+h2 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+/* Section common styling */
+.hero,
+.home,
+.info,
+.story,
+.gallery,
+.rsvp,
+.gifts {
+    position: relative;
+}
+
+/* ==========================================================================
+   Background Decorations & Particle Leaves
+   ========================================================================== */
+.leaf-particle {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.18;
+    animation: floatLeaves 12s infinite linear;
+}
+
+@keyframes floatLeaves {
+    0% {
+        transform: translateY(0) rotate(0deg) translateX(0);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 0.25;
+    }
+
+    90% {
+        opacity: 0.25;
+    }
+
+    100% {
+        transform: translateY(-150px) rotate(360deg) translateX(50px);
+        opacity: 0;
+    }
+}
+
+/* Decorative background shapes for "not too empty" look */
+.bg-decor-left,
+.bg-decor-right {
+    position: absolute;
+    width: 250px;
+    height: 450px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.bg-decor-left {
+    left: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 200'%3E%3Cpath fill='%238ca4d0' d='M10,0 Q30,40 10,80 Q50,110 20,150 Q60,180 10,200 L0,200 L0,0 Z'/%3E%3C/svg%3E");
+}
+
+.bg-decor-right {
+    right: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 200'%3E%3Cpath fill='%238ca4d0' d='M90,0 Q70,40 90,80 Q50,110 80,150 Q40,180 90,200 L100,200 L100,0 Z'/%3E%3C/svg%3E");
+}
+
+/* ==========================================================================
+   Hero Section
+   ========================================================================== */
+.hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('../img/bg-prewed.jpg');
+    background-image: url("../img/bg-prewed.jpg");
     background-size: cover;
     background-position: center;
     z-index: -1;
-    filter: grayscale();
-  }
+    transition: var(--transition-smooth);
+}
 
-  .hero {
-    position: relative;
-    min-height: 100vh;
-  }
-
-  .hero h1,
-  .hero h4,
-  .hero p {
-    text-shadow: var(--shadow);
-  }
-
-  .hero h1 {
-    font-family: 'Sacramento', cursive;
-    font-size: 6rem;
-  }
-
-  .hero h4 {
-    font-size: 1.6rem;
-  }
-
-  .hero p {
-    font-size: 1.4rem;
-  }
-
-  .hero a {
-    color: var(--pink);
-    background-color: white;
-    box-shadow: var(--shadow);
-  }
-
-  .hero a:hover {
-    background-color: var(--pink);
-    color: white;
-  }
-
-  .mynavbar {
-    background-color: rgba(255, 255, 255, 0.3) !important;
-    backdrop-filter: blur(4px);
-  }
-
-  .mynavbar .offcanvas {
-    height: 100vh;
-  }
-
-  .mynavbar .navbar-brand,
-  .mynavbar .offcanvas-title {
-    font-family: 'Sacramento', cursive;
-    font-size: 3.2rem;
-    font-weight: bold;
-  }
-
-  .mynavbar .nav-link {
-    text-transform: uppercase;
-  }
-
-  .home {
-    background-image: url('../img/bg.png');
-    background-size: cover;
-    min-height: 100vh;
-    margin-top: -6rem;
-    padding-top: 15rem;
-    padding-bottom: 5rem;
-  }
-
-  .home h2,
-  .info h2,
-  .story h2,
-  .gallery h2,
-  .rsvp h2,
-  .gifts h2 {
-    color: var(--pink);
-    font-family: 'Sacramento';
-    font-size: 5rem;
-    font-weight: bold;
-  }
-
-  .home h3 {
-    color: #444;
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .home p {
-    font-size: 1.1rem;
-    color: #666;
-  }
-
-  .home .couple {
-    margin-top: 100px;
-  }
-
-  .home .couple h3 {
-    font-family: 'Sacramento';
-    font-size: 2.4rem;
-    color: var(--pink);
-  }
-
-  .home .couple img {
+.hero::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    background: radial-gradient(circle, transparent 20%, rgba(43, 51, 42, 0.45) 80%), var(--dark-overlay);
+    z-index: -1;
+}
 
-  }
+.hero-card {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 2rem 2rem;
+    border-radius: 30px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    max-width: 520px;
+    width: 90%;
+    margin: 0 auto;
+}
 
-  .home .heart {
-    width: 50px;
-    height: 50px;
-    background-color: white;
-    display: flex;
-    border-radius: 50%;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%) translateY(65px);
-  }
-
-  .home .heart i {
-    margin: auto;
-    color: var(--pink);
-  }
-
-  .info {
-    background-color: var(--bg);
-    color: white;
-    padding-top: 10rem;
-    padding-bottom: 8rem;
-  }
-
-  .info .alamat {
-    font-size: 1.1rem;
-  }
-
-  .info .description {
+.hero h4 {
     font-size: 1rem;
     font-weight: 300;
-  }
-
-  .info .card {
-    background-color: rgba(255, 255, 255, 0.2) !important;
-    color: white !important;
-    border: 1px solid #999;
-  }
-
-  .info .card-header {
-    border-bottom: 1px solid #999;
     text-transform: uppercase;
-    letter-spacing: 0.1rem;
-  }
-
-  .info .card-body {
-    font-size: 1rem;
-  }
-
-  .info .card-footer {
-    border-top: 1px solid #999;
-    font-size: 0.9rem;
-    font-weight: 300;
-  }
-
-  .story,
-  .gallery,
-  .rsvp,
-  .gifts {
-    padding-top: 10rem;
-    padding-bottom: 8rem;
-  }
-
-  .story span,
-  .gallery span,
-  .gifts span {
-    text-transform: uppercase;
-    color: #666;
-    font-size: 0.9rem;
-    letter-spacing: 1px;
-    display: block;
+    letter-spacing: 4px;
+    color: var(--gold-light);
     margin-bottom: 1rem;
-  }
+}
 
-  .story p,
-  .gallery p,
-  .rsvp p,
-  .gifts p {
-    font-size: 1rem;
+.hero h1 {
+    font-family: 'Sacramento', cursive;
+    font-size: 3.2rem;
+    color: #ffffff;
+    text-shadow: 2px 4px 10px rgba(0, 0, 0, 0.4);
+    margin-bottom: 0.8rem;
+    line-height: 1.1;
+}
+
+.hero p {
+    font-size: 0.95rem;
     font-weight: 300;
-  }
+    letter-spacing: 1px;
+    color: #f3f5f2;
+    margin-bottom: 1rem;
+}
 
-  .timeline {
-    list-style: none;
-    padding: 1.4rem 0;
-    margin-top: 1rem;
+.hero .btn {
+    padding: 0.8rem 2.5rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    border-radius: 50px;
+    background: var(--gold-gradient) !important;
+    border: none !important;
+    color: #fff !important;
+    box-shadow: 0 8px 25px rgba(184, 145, 45, 0.4);
+    transition: var(--transition-smooth);
+}
+
+.hero .btn:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 12px 30px rgba(184, 145, 45, 0.6);
+}
+
+/* ==========================================================================
+   Simply Countdown Tiles
+   ========================================================================== */
+.simply-countdown {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 1.2rem 0;
+}
+
+.simply-countdown>.simply-section {
+    background: rgba(255, 255, 255, 0.9) !important;
+    width: 85px !important;
+    height: 85px !important;
+    border-radius: 50% !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: var(--shadow-premium) !important;
+    border: 2px solid var(--sage-light) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    transition: var(--transition-smooth);
+}
+
+.simply-countdown>.simply-section:hover {
+    transform: translateY(-5px);
+    background: #ffffff !important;
+    border-color: var(--gold) !important;
+}
+
+.simply-countdown>.simply-section .simply-amount {
+    font-size: 1.45rem !important;
+    font-weight: 700;
+    color: var(--sage-dark);
+    font-family: 'Playfair Display', serif;
+    line-height: 1.1;
+}
+
+.simply-countdown>.simply-section .simply-word {
+    font-size: 0.75rem !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--sage-medium);
+    margin-top: 2px;
+}
+
+/* ==========================================================================
+   Navbar
+   ========================================================================== */
+.mynavbar {
+    background-color: rgba(250, 249, 246, 0.75) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(124, 142, 122, 0.15);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
+    padding: 0.8rem 0;
+    transition: var(--transition-smooth);
+}
+
+.mynavbar .navbar-brand {
+    font-family: 'Sacramento', cursive;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--sage-dark) !important;
+}
+
+.mynavbar .nav-link {
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--sage-dark) !important;
+    padding: 0.5rem 1.2rem !important;
     position: relative;
+    transition: var(--transition-smooth);
+}
 
-  }
-
-  .timeline::before {
-    content: '';
-    top: 0;
+.mynavbar .nav-link::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 2px;
     bottom: 0;
-    position: absolute;
-    width: 1px;
-    background-color: #ccc;
     left: 50%;
-  }
-
-  .timeline li {
-    margin-bottom: 1.5rem;
-    position: relative;
-  }
-
-  .timeline li::before,
-  .timeline li::after {
-    content: '';
-    display: table;
-  }
-
-  .timeline li::after {
-    clear: both;
-  }
-
-  .timeline li .timeline-image {
-    width: 160px;
-    height: 160px;
-    background-color: #ccc;
-    position: absolute;
-    left: 50%;
+    background-color: var(--gold);
+    transition: var(--transition-smooth);
     transform: translateX(-50%);
-    border-radius: 50%;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-  }
-  /* .timeline-image {
-    width: 160px;
-    height: 160px;
-    position: absolute;
-    border-radius: 50%;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-  } */
+}
 
-  .timeline li .timeline-panel {
-    width: 40%;
-    float: left;
-    border: 1px solid #ccc;
-    padding: 2rem;
-    position: relative;
-    border-radius: 8px;
-    background-color: #fff;
-  }
+.mynavbar .nav-link:hover::after {
+    width: 60%;
+}
 
-  .timeline li .timeline-panel::before {
-    content: '';
-    display: inline-block;
-    position: absolute;
-    border-top: 15px solid transparent;
-    border-left: 15px solid #ccc;
-    border-right: 0 solid #ccc;
-    border-bottom: 15px solid transparent;
-    top: 80px;
-    right: -15px;
-  }
+.mynavbar .nav-link:hover {
+    color: var(--gold) !important;
+}
 
-  .timeline li .timeline-panel::after {
-    content: '';
-    position: absolute;
-    display: inline-block;
-    border-top: 14px solid transparent;
-    border-left: 14px solid #fff;
-    border-right: 0 solid #fff;
-    border-bottom: 14px solid transparent;
-    top: 81px;
-    right: -13px;
-  }
+/* ==========================================================================
+   Home Section (The Couple)
+   ========================================================================== */
+.home {
+    padding: 8rem 0 6rem;
+    background-color: transparent;
+}
 
-  .timeline li.timeline-inverted .timeline-panel {
-    float: right;
-  }
-
-  .timeline li.timeline-inverted .timeline-panel::before {
-    border-left-width: 0;
-    border-right-width: 15px;
-    left: -15px;
-    right: auto;
-  }
-
-  .timeline li.timeline-inverted .timeline-panel::after {
-    border-left-width: 0;
-    border-right-width: 14px;
-    left: -13px;
-    right: auto;
-  }
-
-  .gallery {
-    background-color: #f5f5f5;
-  }
-
-  .rsvp {
-    background-color: var(--bg);
-  }
-
-  .rsvp h2 {
+.home h2 {
+    font-family: 'Sacramento', cursive;
     font-size: 4.5rem;
-  }
+    color: var(--sage-dark);
+    margin-bottom: 0.5rem;
+}
 
-  .rsvp p {
-    color: white;
-  }
+.home h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--sage-medium);
+    font-weight: 400;
+}
 
-  .rsvp form label {
-    color: white;
-  }
+/* Organic Arch Picture Frames */
+.photo-container {
+    position: relative;
+    display: inline-block;
+    padding: 12px;
+    margin-bottom: 1.5rem;
+}
 
-  .rsvp button {
-    background-color: var(--pink);
-    color: white;
-    border: 1px solid var(--pink);
-  }
+.wedding-img-circle {
+    width: 220px;
+    height: 310px;
+    object-fit: cover;
+    border-radius: 120px 120px 20px 20px;
+    /* Modern Arched Frame */
+    box-shadow: var(--shadow-premium);
+    position: relative;
+    z-index: 2;
+    transition: var(--transition-smooth);
+}
 
-  .rsvp button:hover {
-    background-color: white;
-    color: var(--pink);
-    border: 1px solid white;
-  }
+.photo-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 130px 130px 30px 30px;
+    border: 2px dashed var(--gold);
+    z-index: 1;
+    transform: rotate(-3deg);
+    transition: var(--transition-smooth);
+}
 
-  footer {
-    padding: 3rem;
-    background-color: var(--pink);
-    color: white;
-  }
+.photo-container:hover .wedding-img-circle {
+    transform: scale(1.03);
+}
 
-  footer a {
-    color: var(--bg);
-    font-weight: bold;
-    text-decoration: none;
-  }
+.photo-container:hover::before {
+    transform: rotate(2deg) scale(1.03);
+}
 
-  footer a:hover {
-    color: white;
-  }
+.couple-card {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(124, 142, 122, 0.15);
+    border-radius: 24px;
+    padding: 2rem 1.5rem;
+    backdrop-filter: blur(8px);
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition-smooth);
+}
 
-  footer li {
-    list-style: none;
-    display: inline;
-    margin: 0.5rem;
-  }
+.couple-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-premium);
+    border-color: var(--sage-light);
+}
 
-  .audio-icon-wrapper {
-    width: 4rem;
-    height: 4rem;
-    font-size: 4rem;
-    position: fixed;
-    bottom: 2.5rem;
-    right: 2rem;
-    cursor: pointer;
-    color: white;
-    opacity: 0.5;
-    mix-blend-mode: difference;
-    animation: rotating 4s linear infinite;
-    transform-origin: center;
+.couple-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--sage-dark);
+    margin-bottom: 0.5rem;
+}
+
+/* Wedding Interlaced Rings SVG Divider */
+.rings-divider {
     display: flex;
     justify-content: center;
     align-items: center;
-    line-height: 0;
-  }
+    position: relative;
+    height: 80px;
+}
 
-  @keyframes rotating {
+.heart-icon {
+    width: 60px;
+    height: 60px;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    box-shadow: var(--shadow-premium);
+    color: var(--gold);
+    font-size: 1.4rem;
+    z-index: 3;
+    animation: heartbeat-pulse 2s infinite ease-in-out;
+}
+
+@keyframes heartbeat-pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    14% {
+        transform: scale(1.12);
+    }
+
+    28% {
+        transform: scale(1);
+    }
+
+    42% {
+        transform: scale(1.15);
+    }
+
+    70% {
+        transform: scale(1);
+    }
+}
+
+/* ==========================================================================
+   Info Section (Events)
+   ========================================================================== */
+.info {
+    background-color: var(--sage-dark);
+    background-image: linear-gradient(135deg, var(--sage-dark) 0%, #2f3a2e 100%);
+    color: #ffffff;
+    padding: 8rem 0;
+    overflow: hidden;
+}
+
+.info h2 {
+    font-family: 'Sacramento', cursive;
+    font-size: 4.5rem;
+    color: var(--gold-light);
+    margin-bottom: 1.5rem;
+}
+
+.info .alamat {
+    color: var(--cream-bg);
+    font-size: 1.15rem;
+    margin-bottom: 2rem;
+}
+
+.info-map-container {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 12px;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.info iframe {
+    border-radius: 16px !important;
+    width: 100%;
+}
+
+.info .btn-outline-info {
+    border: 1px solid var(--gold-light) !important;
+    color: var(--gold-light) !important;
+    background: transparent !important;
+    padding: 0.6rem 1.8rem;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: var(--transition-smooth);
+}
+
+.info .btn-outline-info:hover {
+    background: var(--gold-gradient) !important;
+    border-color: transparent !important;
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(184, 145, 45, 0.3);
+}
+
+/* Akad & Resepsi Cards */
+.event-card {
+    background: rgba(255, 255, 255, 0.06) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 24px 24px 8px 8px !important;
+    color: #ffffff !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    transition: var(--transition-smooth);
+    overflow: hidden;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.09) !important;
+    border-color: rgba(223, 202, 160, 0.3) !important;
+}
+
+.event-card .card-header {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--gold-light);
+    padding: 1.2rem;
+}
+
+.event-card .card-body {
+    padding: 2rem 1.5rem;
+}
+
+.event-card i {
+    color: var(--gold-light);
+    font-size: 1.8rem;
+}
+
+.event-card span {
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.event-card .card-footer {
+    background: rgba(0, 0, 0, 0.15) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.85rem;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 1rem;
+}
+
+/* ==========================================================================
+   Story / Timeline Section
+   ========================================================================== */
+.story {
+    padding: 8rem 0;
+    background-color: transparent;
+}
+
+.story h2 {
+    font-family: 'Sacramento', cursive;
+    font-size: 4.5rem;
+    color: var(--sage-dark);
+    margin-bottom: 0.5rem;
+}
+
+.story span.subtitle {
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 0.85rem;
+    color: var(--sage-medium);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.timeline {
+    position: relative;
+    padding: 2rem 0;
+    list-style: none;
+}
+
+.timeline::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    background: dashed var(--sage-light);
+    transform: translateX(-50%);
+}
+
+.timeline li {
+    position: relative;
+    margin-bottom: 5rem;
+    width: 100%;
+}
+
+.timeline li::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Timeline Badge (Heart Icon) */
+.timeline li .timeline-badge {
+    position: absolute;
+    left: 50%;
+    top: 25px;
+    transform: translateX(-50%);
+    width: 48px;
+    height: 48px;
+    background-color: var(--sage-dark);
+    border: 3px solid #ffffff;
+    border-radius: 50% !important;
+    box-shadow: var(--shadow-premium);
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--gold-light);
+    font-size: 1.15rem;
+    transition: var(--transition-smooth);
+}
+
+.timeline li .timeline-badge i {
+    line-height: 1;
+}
+
+.timeline li:hover .timeline-badge {
+    background-color: var(--gold);
+    color: #ffffff;
+    transform: translateX(-50%) scale(1.1);
+}
+
+.timeline li .timeline-panel {
+    position: relative;
+    width: 42%;
+    float: left;
+    background: #ffffff;
+    border: 1px solid rgba(124, 142, 122, 0.15);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition-smooth);
+}
+
+.timeline li .timeline-panel:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-premium);
+    border-color: var(--sage-medium);
+}
+
+.timeline li .timeline-panel::before {
+    content: "";
+    position: absolute;
+    top: 35px;
+    right: -10px;
+    width: 20px;
+    height: 20px;
+    background: #ffffff;
+    border-top: 1px solid rgba(124, 142, 122, 0.15);
+    border-right: 1px solid rgba(124, 142, 122, 0.15);
+    transform: rotate(45deg);
+}
+
+.timeline li.timeline-inverted .timeline-panel {
+    float: right;
+}
+
+.timeline li.timeline-inverted .timeline-panel::before {
+    left: -10px;
+    right: auto;
+    border-top: none;
+    border-right: none;
+    border-left: 1px solid rgba(124, 142, 122, 0.15);
+    border-bottom: 1px solid rgba(124, 142, 122, 0.15);
+    transform: rotate(45deg);
+}
+
+.timeline-heading h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--sage-dark);
+    margin-bottom: 0.2rem;
+}
+
+.timeline-heading span {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.timeline-body p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #666666;
+    margin-top: 0.8rem;
+    margin-bottom: 0;
+}
+
+/* ==========================================================================
+   Gallery Section
+   ========================================================================== */
+.gallery {
+    padding: 8rem 0;
+    background-color: var(--sage-ultra-light);
+}
+
+.gallery h2 {
+    font-family: 'Sacramento', cursive;
+    font-size: 4.5rem;
+    color: var(--sage-dark);
+    margin-bottom: 0.5rem;
+}
+
+.gallery span.subtitle {
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 0.85rem;
+    color: var(--sage-medium);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 1.5rem;
+}
+
+.gallery-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition-smooth);
+    border: 4px solid #ffffff;
+    margin-bottom: 20px;
+}
+
+.gallery-card img {
+    transition: var(--transition-smooth);
+    width: 100%;
+    object-fit: cover;
+}
+
+.gallery-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-premium);
+}
+
+.gallery-card:hover img {
+    transform: scale(1.06);
+}
+
+/* ==========================================================================
+   RSVP Section
+   ========================================================================== */
+.rsvp {
+    background-color: var(--sage-dark);
+    background-image: linear-gradient(135deg, var(--sage-dark) 0%, #293328 100%);
+    padding: 8rem 0;
+    color: #ffffff;
+}
+
+.rsvp h2 {
+    font-family: 'Sacramento', cursive;
+    font-size: 4.5rem;
+    color: var(--gold-light);
+    margin-bottom: 1rem;
+}
+
+.rsvp p {
+    color: var(--cream-bg);
+    margin-bottom: 3rem;
+}
+
+.rsvp-form-container {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 30px;
+    padding: 3rem 2.5rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.rsvp-form-container label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 0.5rem;
+}
+
+.rsvp-form-container .form-control,
+.rsvp-form-container .form-select {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff !important;
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    transition: var(--transition-smooth);
+}
+
+.rsvp-form-container .form-control:focus,
+.rsvp-form-container .form-select:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--gold-light);
+    box-shadow: 0 0 10px rgba(223, 202, 160, 0.3);
+}
+
+.rsvp-form-container option {
+    background-color: var(--sage-dark);
+    color: #ffffff;
+}
+
+.rsvp-form-container .btn {
+    background: var(--gold-gradient) !important;
+    border: none !important;
+    color: #ffffff !important;
+    padding: 0.8rem 2.5rem;
+    border-radius: 30px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    box-shadow: 0 8px 20px rgba(184, 145, 45, 0.4);
+    transition: var(--transition-smooth);
+}
+
+.rsvp-form-container .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(184, 145, 45, 0.5);
+}
+
+/* Disqus Custom styling */
+#disqus_thread {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 2rem;
+    margin-top: 3rem;
+    box-shadow: var(--shadow-premium);
+}
+
+/* ==========================================================================
+   Gifts Section (Digital Cards)
+   ========================================================================== */
+.gifts {
+    padding: 8rem 0;
+    background-color: transparent;
+}
+
+.gifts h2 {
+    font-family: 'Sacramento', cursive;
+    font-size: 4.5rem;
+    color: var(--sage-dark);
+    margin-bottom: 0.5rem;
+}
+
+.gifts span.subtitle {
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 0.85rem;
+    color: var(--sage-medium);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 1.5rem;
+}
+
+/* Realistic Digital Credit Card style for BCA / Bank accounts */
+.digital-card {
+    background: linear-gradient(135deg, #4f5e4e 0%, #2f3a2e 100%);
+    color: #ffffff;
+    border-radius: 20px;
+    padding: 2.2rem 2rem;
+    box-shadow: 0 15px 35px rgba(47, 58, 46, 0.25), 0 5px 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    text-align: left;
+    max-width: 400px;
+    margin: 1.5rem auto;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: var(--transition-smooth);
+}
+
+.digital-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(47, 58, 46, 0.35);
+}
+
+/* Shiny metallic pattern overlay on cards */
+.digital-card::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+/* Mini Chip graphic */
+.card-chip {
+    width: 45px;
+    height: 32px;
+    background: linear-gradient(135deg, #dfcaa0 0%, #b8912d 100%);
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    position: relative;
+    box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.5);
+}
+
+.card-chip::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    height: 70%;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+}
+
+.card-bank-name {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--gold-light);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+}
+
+.card-number-container {
+    margin-bottom: 1.2rem;
+}
+
+.card-number {
+    font-size: 1.45rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    font-family: monospace;
+}
+
+.card-holder {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.card-holder-name {
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-top: 2px;
+    color: #ffffff;
+}
+
+.btn-copy-card {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 0.4rem 1rem;
+    border-radius: 30px;
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    transition: var(--transition-smooth);
+}
+
+.btn-copy-card:hover {
+    background: #ffffff !important;
+    color: var(--sage-dark) !important;
+}
+
+/* QR Code / Saweria Card Style */
+.qr-card {
+    text-align: center !important;
+    padding: 2.5rem 2rem !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.qr-card .qr-card-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--gold-light);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    margin-bottom: 1.2rem;
+}
+
+.qr-code-container {
+    background: #ffffff;
+    padding: 12px;
+    border-radius: 16px;
+    box-shadow: var(--shadow-soft);
+    margin-bottom: 1.2rem;
+    display: inline-block;
+}
+
+.qr-card .card-holder {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 0.2rem;
+}
+
+.qr-card .card-holder-name {
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #ffffff;
+}
+
+/* ==========================================================================
+   Footer Section
+   ========================================================================== */
+footer {
+    padding: 4rem 0 3rem;
+    background-color: var(--sage-dark);
+    color: #ffffff;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+footer a {
+    color: var(--gold-light);
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition-smooth);
+}
+
+footer a:hover {
+    color: #ffffff;
+}
+
+footer ul {
+    padding: 0;
+}
+
+footer li {
+    list-style: none;
+    display: inline-block;
+    margin: 0 0.8rem;
+}
+
+footer li a {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.3rem;
+    transition: var(--transition-smooth);
+}
+
+footer li a:hover {
+    color: var(--gold-light);
+    transform: translateY(-3px);
+}
+
+/* ==========================================================================
+   Floating Audio Vinyl Disc Controller
+   ========================================================================== */
+#audio-container {
+    position: fixed;
+    bottom: 2.5rem;
+    right: 2.5rem;
+    z-index: 9999;
+}
+
+.audio-icon-wrapper {
+    width: 3.8rem;
+    height: 3.8rem;
+    border-radius: 50%;
+    background: #2b332a;
+    border: 3px solid var(--gold);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+    color: var(--gold-light);
+    font-size: 1.4rem;
+    transition: var(--transition-smooth);
+    position: relative;
+}
+
+/* Spinner behavior when active */
+.audio-icon-wrapper.playing {
+    animation: vinyl-spin 4s linear infinite;
+}
+
+.audio-icon-wrapper::before {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--cream-bg);
+    border: 2px solid #2b332a;
+    z-index: 10;
+}
+
+@keyframes vinyl-spin {
     from {
-      transform: rotate(0);
+        transform: rotate(0);
     }
+
     to {
-      transform: rotate(360deg);
+        transform: rotate(360deg);
     }
-  }
+}
 
-  /* Media Query */
-  /* Extra large */
-  @media (max-width: 1200px) {
-    .home .heart {
-      transform: translateX(-50%) translateY(45px);
-    }
-  }
+/* Vinyl Stylus/Arm representation */
+.audio-icon-wrapper::after {
+    content: "";
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 16px;
+    height: 16px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23dfcaa0'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.9;
+    transform-origin: top right;
+    transition: var(--transition-smooth);
+    z-index: 11;
+}
 
-  /* laptop */
-  @media (max-width: 992px) {
+.audio-icon-wrapper:hover {
+    transform: scale(1.08);
+}
+
+/* ==========================================================================
+   Media Queries & Responsive Styling
+   ========================================================================== */
+@media (max-width: 992px) {
     html {
-      font-size: 75%;
-    }
-
-    .simply-countdown > .simply-section {
-      padding: 70px;
-    }
-
-    .home .heart {
-      display: none;
+        font-size: 90%;
     }
 
     .timeline::before {
-      left: 60px;
+        left: 40px;
     }
 
-    .timeline li .timeline-image {
-      left: 15px;
-      margin-left: 45px;
-      top: 16px;
+    .timeline li .timeline-badge {
+        left: 40px;
+        width: 44px;
+        height: 44px;
+        top: 20px;
     }
 
     .timeline li .timeline-panel {
-      width: calc((100% - 200px));
-      float: right;
+        width: calc(100% - 120px);
+        float: right;
     }
 
     .timeline li .timeline-panel::before {
-      border-left-width: 0;
-      border-right-width: 15px;
-      left: -15px;
-      right: auto;
+        left: -10px;
+        right: auto;
+        border-top: none;
+        border-right: none;
+        border-left: 1px solid rgba(124, 142, 122, 0.15);
+        border-bottom: 1px solid rgba(124, 142, 122, 0.15);
+        transform: rotate(45deg);
     }
+}
 
-    .timeline li .timeline-panel::after {
-      border-left-width: 0;
-      border-right-width: 14px;
-      left: -13px;
-      right: auto;
-    }
-  }
-
-  /* tablet */
-  @media (max-width: 768px) {
+@media (max-width: 768px) {
     html {
-      font-size: 65%;
+        font-size: 85%;
     }
 
-    .simply-countdown > .simply-section {
-      padding: 60px;
-      margin: 5px;
+    .hero h1 {
+        font-size: 2.6rem;
+    }
+
+    h2 {
+        font-size: 2.2rem;
+    }
+
+    .simply-countdown {
+        gap: 8px;
+    }
+
+    .simply-countdown>.simply-section {
+        width: 70px !important;
+        height: 70px !important;
+    }
+
+    .simply-countdown>.simply-section .simply-amount {
+        font-size: 1.4rem !important;
     }
 
     .mynavbar .nav-link {
-      font-size: 2rem;
-      text-align: center;
+        font-size: 1.1rem;
+        text-align: center;
+        padding: 0.8rem 0 !important;
     }
 
-    .sticky-top {
-      overflow: hidden;
+    .offcanvas-body {
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-card {
+        padding: 1.5rem 1rem;
     }
 
-    .timeline li .timeline-image {
-      width: 140px;
-      height: 140px;
-    }
-  }
-
-  /* mobile phone */
-  @media (max-width: 576px) {
-    html {
-      font-size: 60%;
+    .hero h1 {
+        font-size: 2.2rem;
     }
 
-    .simply-countdown > .simply-section {
-      padding: 45px;
-      margin: 3px;
+    .wedding-img-circle {
+        width: 180px;
+        height: 250px;
     }
 
-    .timeline li .timeline-image {
-      width: 80px;
-      height: 80px;
+    .timeline li .timeline-badge {
+        width: 40px;
+        height: 40px;
+        left: 30px;
+        top: 15px;
     }
 
     .timeline li .timeline-panel {
-      width: 65%;
-      transform: translateX(-20px);
+        width: calc(100% - 90px);
+        padding: 1.5rem;
     }
 
-    .timeline li .timeline-panel::before {
-      top: 30px;
+    .simply-countdown {
+        gap: 6px !important;
     }
 
-    .timeline li .timeline-panel::after {
-      top: 31px;
+    .simply-countdown>.simply-section {
+        width: 60px !important;
+        height: 60px !important;
+        border-radius: 50% !important;
     }
-  }
+
+    .simply-countdown>.simply-section .simply-amount {
+        font-size: 1.15rem !important;
+    }
+
+    .simply-countdown>.simply-section .simply-word {
+        font-size: 0.55rem !important;
+    }
+}
+
+@media (max-width: 400px) {
+    .hero-card {
+        padding: 1.2rem 0.8rem;
+    }
+
+    .hero h1 {
+        font-size: 1.85rem;
+    }
+
+    .wedding-img-circle {
+        width: 150px;
+        height: 210px;
+    }
+}
+
+/* Height-based media queries to prevent vertical overflow on any screen aspect ratio */
+@media (max-height: 750px) {
+    .hero-card {
+        padding: 1.5rem 1.5rem;
+    }
+
+    .hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .simply-countdown {
+        margin: 0.8rem 0;
+        gap: 8px;
+    }
+
+    .simply-countdown>.simply-section {
+        width: 65px !important;
+        height: 65px !important;
+    }
+
+    .simply-countdown>.simply-section .simply-amount {
+        font-size: 1.3rem !important;
+    }
+
+    .hero h4 {
+        margin-bottom: 0.8rem;
+    }
+
+    .hero p {
+        margin-bottom: 0.8rem;
+    }
+}
+
+@media (max-height: 600px) {
+    .hero-card {
+        padding: 1rem 1.2rem;
+    }
+
+    .hero h1 {
+        font-size: 2rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .simply-countdown {
+        margin: 0.5rem 0;
+        gap: 6px;
+    }
+
+    .simply-countdown>.simply-section {
+        width: 55px !important;
+        height: 55px !important;
+    }
+
+    .simply-countdown>.simply-section .simply-amount {
+        font-size: 1.1rem !important;
+    }
+
+    .hero h4 {
+        margin-bottom: 0.4rem;
+        font-size: 0.9rem;
+    }
+
+    .hero p {
+        margin-bottom: 0.4rem;
+        font-size: 0.85rem;
+    }
+}
+
+
+/* ==========================================================================
+   Wishes / Guestbook Feed Styles
+   ========================================================================== */
+.wishes-container {
+    max-height: 480px;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+/* Custom styling for scrollbar in wishes feed */
+.wishes-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.wishes-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.wishes-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.wishes-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+.wish-card {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(124, 142, 122, 0.15);
+    border-radius: 18px;
+    padding: 1.4rem;
+    margin-bottom: 1.2rem;
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition-smooth);
+}
+
+.wish-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-premium);
+    background: #ffffff;
+    border-color: var(--sage-light);
+}
+
+.wish-card p {
+    color: #4a4a4a;
+}

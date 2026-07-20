@@ -25,10 +25,19 @@ class HomeController extends Controller
     public function index()
     {
         $users = User::count();
+        $totalRsvps = \App\Models\Rsvp::count();
+        $totalWishes = \App\Models\Wish::count();
+        $totalAttendingGuests = \App\Models\Rsvp::where('kehadiran', 1)->sum('jumlah');
+        $confirmedAttending = \App\Models\Rsvp::where('kehadiran', 1)->count();
+        $confirmedNotAttending = \App\Models\Rsvp::where('kehadiran', 0)->count();
 
         $widget = [
             'users' => $users,
-            //...
+            'totalRsvps' => $totalRsvps,
+            'totalWishes' => $totalWishes,
+            'totalAttendingGuests' => $totalAttendingGuests,
+            'confirmedAttending' => $confirmedAttending,
+            'confirmedNotAttending' => $confirmedNotAttending,
         ];
 
         return view('admin.home', compact('widget'));

@@ -16,7 +16,9 @@ return new class extends Migration
             $table->string('nama_pengantin_istri');
             $table->string('nama_pengantin_pria');
             $table->date('tanggal_pernikahan');
-            $table->time('waktu_acara');
+            $table->time('mulai_akad');
+            $table->time('selesai_akad');
+            $table->time('mulai_resepsi');
             $table->string('alamat');
             $table->text('deskripsi');
             $table->timestamps();

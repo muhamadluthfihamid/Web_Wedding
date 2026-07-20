@@ -15,10 +15,16 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="mb-3">
-                        <label for="gambar" class="form-label">Gambar</label>
-                        <input type="file" name="gambar" id="gambar" class="form-control">
+                    <div id="drop-area" class="border p-5 text-center">
+                        <p>Drag & drop gambar di sini atau klik</p>
+                        <input type="file" id="fileElem" name="images[]" multiple hidden>
+                        <button type="button" onclick="document.getElementById('fileElem').click()">
+                            Pilih Gambar
+                        </button>
+                        <div id="preview" class="flex gap-2 mt-3 mb-2"></div>
                     </div>
+
+
                 </div>
                 <div class="col-md-6">
                     <div class="mb-3">
@@ -42,4 +48,50 @@
             <a href="{{ route('gallery.index') }}" class="btn btn-secondary">Back</a>
         </form>
     </div>
+
+    <script id="9k0y3m">
+        const dropArea = document.getElementById('drop-area');
+        const fileInput = document.getElementById('fileElem');
+        const preview = document.getElementById('preview');
+
+        dropArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropArea.classList.add('bg-light');
+        });
+
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.classList.remove('bg-light');
+        });
+
+        dropArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropArea.classList.remove('bg-light');
+
+            fileInput.files = e.dataTransfer.files;
+            showPreview(e.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', () => {
+            showPreview(fileInput.files);
+        });
+
+        function showPreview(files) {
+            preview.innerHTML = '';
+
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+
+                reader.onload = (e) => {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.width = '80px';
+                    img.style.height = '80px';
+                    img.style.objectFit = 'cover';
+                    preview.appendChild(img);
+                };
+
+                reader.readAsDataURL(file);
+            });
+        }
+    </script>
 @endsection

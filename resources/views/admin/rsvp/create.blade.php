@@ -1,45 +1,72 @@
 @extends('admin.layouts.admin')
 
 @section('main-content')
-    <div class="container">
-        <h1 class="h3 mb-4 text-gray-800">{{ __('Create Rsvp') }}</h1>
+    <!-- Page Heading -->
+    <div class="mb-6">
+        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">{{ __('Tambah RSVP Baru') }}</h1>
+        <p class="text-sm text-slate-500 mt-1">Tambahkan konfirmasi kehadiran tamu secara manual</p>
+    </div>
 
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
+    @if ($errors->any())
+        <div class="mb-6 bg-rose-50 border-l-4 border-rose-500 p-4 rounded-r-lg shadow-sm" role="alert">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-exclamation-circle text-rose-500"></i>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-semibold text-rose-800">Terdapat beberapa kesalahan:</h3>
+                    <ul class="mt-2 list-disc list-inside text-sm text-rose-700 space-y-1">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             </div>
-        @endif
+        </div>
+    @endif
 
-        <form action="{{ route('rsvp.store') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="form-group">
-                        <label for="nama_tamu">Nama Tamu:</label>
-                        <input type="text" class="form-control" id="nama_tamu" name="nama_tamu"
-                            value="{{ old('nama_tamu') }}">
-                    </div>
-                    <label for="kehadiran" class="form-label">Kehadiran</label>
-                    <select name="kehadiran" id="kehadiran" class="form-control" required>
-                        <option value="">Pilih Kehadiran</option>
-                        <option value="Hadir">Hadir</option>
-                        <option value="Tidak Hadir">Tidak Hadir</option>
-                    </select>
-                    <div class="form-group">
-                        <label for="jumlah">Jumlah:</label>
-                        <input type="number" class="form-control" id="jumlah" name="jumlah"
-                            value="{{ old('tanggal') }}">
-                    </div>
+    <div class="max-w-xl bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div class="px-6 py-5 border-b border-slate-100">
+            <h3 class="text-lg font-bold text-slate-900">Form Konfirmasi Kehadiran</h3>
+        </div>
+        <div class="p-6">
+            <form action="{{ route('rsvp.store') }}" method="POST" class="space-y-6">
+                @csrf
+
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1" for="nama_tamu">Nama Tamu:</label>
+                    <input type="text" id="nama_tamu" name="nama_tamu" value="{{ old('nama_tamu') }}" required
+                           class="block w-full px-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all"
+                           placeholder="Nama Tamu">
                 </div>
 
-            </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1" for="kehadiran">Kehadiran:</label>
+                    <select name="kehadiran" id="kehadiran" required
+                            class="block w-full px-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all">
+                        <option value="" disabled selected>Pilih Kehadiran</option>
+                        <option value="1">Hadir</option>
+                        <option value="0">Tidak Hadir</option>
+                    </select>
+                </div>
 
-            <button type="submit" class="btn btn-primary">Save</button>
-            <a href="{{ route('rsvp.index') }}" type="button" class="btn btn-warning">Back</a>
-        </form>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1" for="jumlah">Jumlah Tamu (Pax):</label>
+                    <input type="number" id="jumlah" name="jumlah" value="{{ old('jumlah', 1) }}" min="1" required
+                           class="block w-full px-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all">
+                </div>
+
+                <div class="border-t border-slate-100 pt-6 flex justify-between gap-4">
+                    <a href="{{ route('rsvp.index') }}" 
+                       class="inline-flex justify-center items-center gap-1.5 px-4 py-2 border border-slate-200 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
+                        <i class="fas fa-arrow-left"></i> Batal
+                    </a>
+                    <button type="submit" 
+                            class="inline-flex justify-center items-center gap-1.5 px-5 py-2.5 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                        <i class="fas fa-save"></i> Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 @endsection

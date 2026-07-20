@@ -24,15 +24,27 @@ class BiodataPriaController extends Controller
             'nama' => 'required|string|max:255',
             'ibu' => 'required|string|max:255',
             'bapak' => 'required|string|max:255',
-            'foto' => 'nullable|image|max:2048',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'deskripsi' => 'required|string',
+            'asal' => 'nullable|string|max:255',
         ]);
 
-        $biodataPria = new BiodataPria($validatedData);
+        $biodataPria = new BiodataPria();
+        $biodataPria->nama = $validatedData['nama'];
+        $biodataPria->ibu = $validatedData['ibu'];
+        $biodataPria->bapak = $validatedData['bapak'];
+        $biodataPria->deskripsi = $validatedData['deskripsi'];
+        $biodataPria->asal = $validatedData['asal'] ?? null;
 
         if ($request->hasFile('foto')) {
             $biodataPria->foto = $request->file('foto')->store('foto_pria', 'public');
         }
+        // dd([
+//     'hasFile' => $request->hasFile('foto'),
+//     'file' => $request->file('foto'),
+//     'isValid' => $request->file('foto')?->isValid(),
+//     'realPath' => $request->file('foto')?->getRealPath(),
+// ]);
 
         $biodataPria->save();
 
@@ -41,7 +53,7 @@ class BiodataPriaController extends Controller
 
     public function show(BiodataPria $biodataPria)
     {
-        return view('biodata_pria.show', compact('biodataPria'));
+        return view('admin.pria.index', compact('biodataPria'));
     }
 
     public function edit(BiodataPria $biodataPria)
@@ -55,8 +67,9 @@ class BiodataPriaController extends Controller
             'nama' => 'required|string|max:255',
             'ibu' => 'required|string|max:255',
             'bapak' => 'required|string|max:255',
-            'foto' => 'nullable|image|max:2048',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'deskripsi' => 'required|string',
+            'asal' => 'nullable|string|max:255',
         ]);
 
         $biodataPria->fill($validatedData);

@@ -41,6 +41,9 @@ class LoginController extends Controller
     protected function redirectTo()
     {
         session()->flash('success', 'You are logged in!');
+        if (auth()->user()->isUser()) {
+            return '/rental-info';
+        }
         return $this->redirectTo;
     }
 }

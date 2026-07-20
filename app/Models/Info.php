@@ -17,13 +17,17 @@ class Info extends Model
         'nama_pengantin_istri',
         'nama_pengantin_pria',
         'tanggal_pernikahan',
-        'waktu_acara',
+        'mulai_akad',
+        'selesai_akad',
+        'mulai_resepsi',
         'alamat',
-        'deskripsi'
+        'deskripsi',
+        'latitude',
+        'longtitude'
     ];
     public function galleries()
     {
-        return $this->hasMany(Gallery::class, 'id_nama_pengantin_istri', 'id_nama_pengantin_pria');
+        return $this->hasMany(Gallery::class, 'info_id');
     }
 
 }
