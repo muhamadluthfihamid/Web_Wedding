@@ -7,16 +7,6 @@
         <p class="text-sm text-slate-500 mt-1">Ringkasan aktivitas dan metrik pernikahan Anda</p>
     </div>
 
-    @if (session('success'))
-        <div class="mb-6 bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-r-xl shadow-sm" role="alert">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center gap-3">
-                    <i class="fas fa-check-circle text-emerald-500 text-lg"></i>
-                    <p class="text-sm font-medium text-emerald-800">{{ session('success') }}</p>
-                </div>
-            </div>
-        </div>
-    @endif
 
     @if (session('status'))
         <div class="mb-6 bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-r-xl shadow-sm" role="alert">
@@ -34,12 +24,44 @@
                 <h2 class="text-2xl font-bold">Selamat Datang di Panel Kontrol Undangan Anda!</h2>
                 <p class="text-indigo-100 text-sm leading-relaxed">Melalui panel ini, Anda dapat mengelola data biodata pengantin, detail waktu & lokasi acara, daftar konfirmasi kehadiran tamu (RSVP), ucapan & doa restu, serta nomor rekening hadiah.</p>
             </div>
-            <a href="{{ route('dashboard') }}" target="_blank" 
-                class="flex-shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white text-indigo-600 hover:bg-indigo-50 text-sm font-semibold shadow-sm transition-colors">
-                <i class="fas fa-external-link-alt"></i> Buka Halaman Undangan
+            @if(Auth::user()->slug)
+                <a href="{{ route('undangan.show', Auth::user()->slug) }}" target="_blank" 
+                    class="flex-shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white text-indigo-700 hover:bg-indigo-50 text-sm font-extrabold shadow-md hover:shadow-lg transition-all">
+                    <i class="fas fa-external-link-alt text-emerald-600"></i> Lihat Undangan Saya
+                </a>
+            @else
+                <a href="{{ url('/') }}" target="_blank" 
+                    class="flex-shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white text-indigo-700 hover:bg-indigo-50 text-sm font-extrabold shadow-md hover:shadow-lg transition-all">
+                    <i class="fas fa-external-link-alt text-emerald-600"></i> Lihat Undangan Saya
+                </a>
+            @endif
+        </div>
+    </div>
+
+    <!-- Quick Link Card for Tenant's Website -->
+    @if(Auth::user()->slug)
+    <div class="mb-8 p-6 bg-white rounded-2xl border border-indigo-100 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+            <div class="p-3.5 bg-indigo-50 text-indigo-600 rounded-xl flex-shrink-0">
+                <i class="fas fa-link text-2xl"></i>
+            </div>
+            <div>
+                <span class="block text-xs font-bold text-indigo-600 uppercase tracking-wider">Link Website Undangan Saya</span>
+                <span class="text-sm font-mono text-slate-800 font-semibold break-all">{{ url('/undangan/' . Auth::user()->slug) }}</span>
+            </div>
+        </div>
+        <div class="flex items-center gap-2 w-full sm:w-auto flex-shrink-0">
+            <button onclick="copyDashboardLink('{{ url('/undangan/' . Auth::user()->slug) }}')" 
+                    class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-xl text-xs font-bold transition-colors">
+                <i class="fas fa-copy"></i> Salin Link
+            </button>
+            <a href="{{ route('undangan.show', Auth::user()->slug) }}" target="_blank" 
+               class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-colors shadow-sm">
+                <i class="fas fa-external-link-alt"></i> Buka Website
             </a>
         </div>
     </div>
+    @endif
 
     <!-- Stats Cards Row -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -92,3 +114,13 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    function copyDashboardLink(link) {
+        navigator.clipboard.writeText(link).then(() => {
+            alert('Link undangan Anda berhasil disalin:\n' + link);
+        });
+    }
+</script>
+@endpush

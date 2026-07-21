@@ -60,6 +60,11 @@
                     Info Pernikahan
                 </a>
 
+                <a href="{{ route('audio.index') }}" class="group flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('audio.*') ? 'bg-slate-800 text-white' : 'hover:bg-slate-800 hover:text-white' }}">
+                    <i class="fa-solid fa-music mr-3 text-lg transition-colors {{ request()->routeIs('audio.*') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
+                    Musik / Audio Undangan
+                </a>
+
                 <a href="{{ route('story.index') }}" class="group flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('story.*') ? 'bg-slate-800 text-white' : 'hover:bg-slate-800 hover:text-white' }}">
                     <i class="fa-brands fa-stripe-s mr-3 text-lg transition-colors {{ request()->routeIs('story.*') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
                     Cerita Kita
@@ -95,14 +100,39 @@
                     Biodata Wanita
                 </a>
 
+                <a href="{{ route('turutMengundang.index') }}" class="group flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('turutMengundang.*') ? 'bg-slate-800 text-white' : 'hover:bg-slate-800 hover:text-white' }}">
+                    <i class="fa-solid fa-users-rectangle mr-3 text-lg transition-colors {{ request()->routeIs('turutMengundang.*') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
+                    Turut Mengundang
+                </a>
+
                 @if(Auth::user()->isSuperAdmin())
                     <div class="pt-4 pb-2">
                         <span class="px-4 text-xs font-semibold uppercase tracking-wider text-slate-500">Administrator</span>
                     </div>
 
+                    <a href="{{ route('admin.rental.orders.index') }}" class="group flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('admin.rental.orders.*') ? 'bg-slate-800 text-white' : 'hover:bg-slate-800 hover:text-white' }}">
+                        <i class="fas fa-shopping-cart mr-3 text-lg transition-colors {{ request()->routeIs('admin.rental.orders.*') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
+                        Pesanan Sewa
+                    </a>
+
+                    <a href="{{ route('admin.rental.packages.index') }}" class="group flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('admin.rental.packages.*') ? 'bg-slate-800 text-white' : 'hover:bg-slate-800 hover:text-white' }}">
+                        <i class="fas fa-boxes-packing mr-3 text-lg transition-colors {{ request()->routeIs('admin.rental.packages.*') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
+                        Kelola Paket
+                    </a>
+
                     <a href="{{ route('users.index') }}" class="group flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('users.*') ? 'bg-slate-800 text-white' : 'hover:bg-slate-800 hover:text-white' }}">
                         <i class="fas fa-users-cog mr-3 text-lg transition-colors {{ request()->routeIs('users.*') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
                         Kelola User
+                    </a>
+                @endif
+
+                @if(Auth::user()->slug)
+                    <div class="pt-4 pb-2">
+                        <span class="px-4 text-xs font-semibold uppercase tracking-wider text-slate-500">Web Undangan</span>
+                    </div>
+                    <a href="{{ route('rental.status') }}" class="group flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-indigo-400 hover:bg-slate-800 hover:text-indigo-300 transition-colors">
+                        <i class="fas fa-clock mr-3 text-lg text-indigo-400"></i>
+                        Status Sewa Saya
                     </a>
                 @endif
             </nav>
@@ -126,6 +156,47 @@
 
             <!-- Topbar right actions -->
             <div class="flex items-center gap-4">
+                @if(Auth::user()->isSuperAdmin())
+                <!-- Orders Notification Dropdown -->
+                <div class="relative">
+                    <button id="orders-btn"
+                        data-mark-url="{{ route('notifications.markOrdersRead') }}"
+                        class="p-2 text-slate-600 hover:bg-slate-50 rounded-lg relative focus:outline-none" title="Pesanan Sewa Baru">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        @if($pendingOrdersCount > 0)
+                            <span id="orders-badge" class="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-[10px] font-bold text-white ring-2 ring-white animate-bounce">{{ $pendingOrdersCount }}</span>
+                        @endif
+                    </button>
+                    <!-- Dropdown Panel -->
+                    <div id="orders-dropdown" class="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-xl border border-slate-100 hidden overflow-hidden py-1 z-50">
+                        <div class="px-4 py-2 border-b border-slate-100 bg-amber-50/60 text-xs font-bold text-amber-800 flex items-center justify-between">
+                            <span>Pesanan Sewa Masuk</span>
+                            <span class="text-[10px] bg-amber-200 text-amber-900 px-2 py-0.5 rounded-full font-semibold">{{ $pendingOrdersCount }} Menunggu</span>
+                        </div>
+                        <div class="max-h-64 overflow-y-auto">
+                            @forelse($recentOrders as $order)
+                                <a href="{{ route('admin.rental.orders.show', $order) }}" class="flex px-4 py-3 hover:bg-slate-50 border-b border-slate-100 last:border-b-0 gap-3 items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="h-9 w-9 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-xs">
+                                            <i class="fas fa-store"></i>
+                                        </div>
+                                    </div>
+                                    <div class="text-xs flex-1">
+                                        <div class="font-bold text-slate-900">{{ $order->user->full_name }}</div>
+                                        <div class="text-slate-600 font-medium">Paket {{ $order->package->nama }}</div>
+                                        <div class="text-[10px] text-amber-600 font-semibold mt-0.5"><i class="fas fa-clock mr-0.5"></i> {{ $order->created_at->diffForHumans() }}</div>
+                                    </div>
+                                    <span class="text-xs font-bold text-slate-700">{{ $order->package->harga_format }}</span>
+                                </a>
+                            @empty
+                                <div class="px-4 py-6 text-center text-xs text-slate-400">Tidak ada pesanan sewa baru</div>
+                            @endforelse
+                        </div>
+                        <a href="{{ route('admin.rental.orders.index') }}" class="block text-center py-2.5 text-xs font-bold text-indigo-600 hover:text-indigo-500 border-t border-slate-100 bg-slate-50/50">Kelola Semua Pesanan →</a>
+                    </div>
+                </div>
+                @endif
+
                 <!-- Notifications Dropdown -->
                 <div class="relative">
                     <button id="alerts-btn"
@@ -245,8 +316,89 @@
     </div>
 </div>
 
+<!-- SweetAlert2 (global) -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <!-- Global scripts -->
 @stack('scripts')
+
+<!-- Global Flash Message Alert -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const flashSuccess = {!! json_encode(session('success')) !!};
+        const flashError   = {!! json_encode(session('error')) !!};
+        const flashWarning = {!! json_encode(session('warning')) !!};
+        const flashInfo    = {!! json_encode(session('info')) !!};
+
+        if (flashSuccess) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: flashSuccess,
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3500,
+                timerProgressBar: true,
+                customClass: {
+                    popup: 'text-sm',
+                    title: 'text-base font-bold',
+                }
+            });
+        }
+
+        if (flashError) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: flashError,
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true,
+                customClass: {
+                    popup: 'text-sm',
+                    title: 'text-base font-bold',
+                }
+            });
+        }
+
+        if (flashWarning) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Perhatian!',
+                text: flashWarning,
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true,
+                customClass: {
+                    popup: 'text-sm',
+                    title: 'text-base font-bold',
+                }
+            });
+        }
+
+        if (flashInfo) {
+            Swal.fire({
+                icon: 'info',
+                title: 'Info',
+                text: flashInfo,
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3500,
+                timerProgressBar: true,
+                customClass: {
+                    popup: 'text-sm',
+                    title: 'text-base font-bold',
+                }
+            });
+        }
+    });
+</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -311,6 +463,7 @@
             }
         }
 
+        setupDropdown('orders-btn', 'orders-dropdown', 'orders-badge');
         setupDropdown('alerts-btn', 'alerts-dropdown', 'alerts-badge');
         setupDropdown('messages-btn', 'messages-dropdown', 'messages-badge');
         setupDropdown('user-btn', 'user-dropdown', null);

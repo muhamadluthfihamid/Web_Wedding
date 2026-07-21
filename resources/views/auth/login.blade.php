@@ -19,23 +19,23 @@
 
 <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
     <div class="bg-white py-8 px-4 shadow-xl border border-slate-100 sm:rounded-2xl sm:px-10">
-        
+
         @if ($errors->any())
-            <div class="mb-4 bg-rose-50 border-l-4 border-rose-500 p-4 rounded-r-lg" role="alert">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <i class="fas fa-exclamation-circle text-rose-500"></i>
-                    </div>
-                    <div class="ml-3">
-                        <h3 class="text-sm font-semibold text-rose-800">Terdapat beberapa kesalahan:</h3>
-                        <ul class="mt-2 list-disc list-inside text-sm text-rose-700 space-y-1">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
+        <div class="mb-4 bg-rose-50 border-l-4 border-rose-500 p-4 rounded-r-lg" role="alert">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-exclamation-circle text-rose-500"></i>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-semibold text-rose-800">Terdapat beberapa kesalahan:</h3>
+                    <ul class="mt-2 list-disc list-inside text-sm text-rose-700 space-y-1">
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
             </div>
+        </div>
         @endif
 
         <form method="POST" action="{{ route('login') }}" class="space-y-6">
@@ -60,10 +60,37 @@
                         <i class="fas fa-lock"></i>
                     </div>
                     <input id="password" name="password" type="password" autocomplete="current-password" required
-                        class="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all"
+                        class="block w-full pl-10 pr-10 py-2.5 border border-slate-200 rounded-lg text-slate-950 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all"
                         placeholder="••••••••">
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                        <button type="button" id="togglePassword"
+                            onclick="togglePasswordVisibility()"
+                            class="text-slate-400 hover:text-indigo-500 focus:outline-none transition-colors"
+                            aria-label="Toggle password visibility">
+                            <i id="togglePasswordIcon" class="fas fa-eye text-sm"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
+
+            @push('scripts')
+            <script>
+                function togglePasswordVisibility() {
+                    const passwordInput = document.getElementById('password');
+                    const toggleIcon = document.getElementById('togglePasswordIcon');
+
+                    if (passwordInput.type === 'password') {
+                        passwordInput.type = 'text';
+                        toggleIcon.classList.remove('fa-eye');
+                        toggleIcon.classList.add('fa-eye-slash');
+                    } else {
+                        passwordInput.type = 'password';
+                        toggleIcon.classList.remove('fa-eye-slash');
+                        toggleIcon.classList.add('fa-eye');
+                    }
+                }
+            </script>
+            @endpush
 
             <div class="flex items-center justify-between">
                 <div class="flex items-center">
@@ -72,12 +99,12 @@
                     <label for="remember" class="ml-2 block text-sm text-slate-900 cursor-pointer">Ingat Saya</label>
                 </div>
 
-                @if (Route::has('password.request'))
-                    <div class="text-sm">
-                        <a href="{{ route('password.request') }}" class="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
-                            Lupa password?
-                        </a>
-                    </div>
+                @if (\Illuminate\Support\Facades\Route::has('password.request'))
+                <div class="text-sm">
+                    <a href="{{ route('password.request') }}" class="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
+                        Lupa password?
+                    </a>
+                </div>
                 @endif
             </div>
 

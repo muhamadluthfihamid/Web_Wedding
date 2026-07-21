@@ -30,4 +30,14 @@ class NotificationController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    /**
+     * Mark Order notifications as read by storing the current timestamp in session.
+     */
+    public function markOrdersRead(Request $request)
+    {
+        session(['orders_last_read_at' => now()->toDateTimeString()]);
+
+        return response()->json(['success' => true]);
+    }
 }

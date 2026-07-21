@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\Gifts;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class GiftsController extends Controller
 {
     public function index()
     {
-        $gifts = Gifts::all();
+        /** @var \App\Models\User|null $user */
+        $user = Auth::user();
+        $gifts = ($user && $user->isSuperAdmin()) ? Gifts::all() : Gifts::where('user_id', Auth::id())->get();
         return view('admin.gifts.index', compact('gifts'));
     }
 
@@ -30,21 +32,16 @@ class GiftsController extends Controller
             'no_rek' => 'required|numeric',
         ]);
 
-        // Inisialisasi data yang akan disimpan
         $data = $validated;
+        $data['user_id'] = Auth::id();
 
-        // Jika ada file gambar yang diunggah
         if ($request->hasFile('gambar')) {
-            // Simpan file gambar di folder public/gambar dan dapatkan path-nya
             $path = $request->file('gambar')->store('gambar', 'public');
-            // Tambahkan path gambar ke dalam data yang akan disimpan
             $data['gambar'] = $path;
         }
 
-        // Simpan data ke database
         Gifts::create($data);
 
-        // Redirect ke halaman index dengan pesan sukses
         return redirect()->route('gifts.index')->with('success', 'Gift created successfully.');
     }
 

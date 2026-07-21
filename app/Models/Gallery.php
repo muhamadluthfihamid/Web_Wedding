@@ -11,6 +11,7 @@ class Gallery extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'id_nama_pengantin_istri',
         'id_nama_pengantin_pria',
         'deskripsi',

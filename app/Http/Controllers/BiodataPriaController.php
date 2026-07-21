@@ -9,7 +9,8 @@ class BiodataPriaController extends Controller
 {
     public function index()
     {
-        $biodataPria = BiodataPria::all();
+        $user = auth()->user();
+        $biodataPria = $user->isSuperAdmin() ? BiodataPria::all() : BiodataPria::where('user_id', $user->id)->get();
         return view('admin.pria.index', compact('biodataPria'));
     }
 
@@ -30,6 +31,7 @@ class BiodataPriaController extends Controller
         ]);
 
         $biodataPria = new BiodataPria();
+        $biodataPria->user_id = auth()->id();
         $biodataPria->nama = $validatedData['nama'];
         $biodataPria->ibu = $validatedData['ibu'];
         $biodataPria->bapak = $validatedData['bapak'];
@@ -39,12 +41,6 @@ class BiodataPriaController extends Controller
         if ($request->hasFile('foto')) {
             $biodataPria->foto = $request->file('foto')->store('foto_pria', 'public');
         }
-        // dd([
-//     'hasFile' => $request->hasFile('foto'),
-//     'file' => $request->file('foto'),
-//     'isValid' => $request->file('foto')?->isValid(),
-//     'realPath' => $request->file('foto')?->getRealPath(),
-// ]);
 
         $biodataPria->save();
 

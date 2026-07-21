@@ -10,7 +10,8 @@ class StoryController extends Controller
 {
     public function index()
     {
-        $story = Story::latest()->first();
+        $user = auth()->user();
+        $story = $user->isSuperAdmin() ? Story::latest()->first() : Story::where('user_id', $user->id)->latest()->first();
         return view('admin.story.index', compact('story'));
     }
 
@@ -38,6 +39,7 @@ class StoryController extends Controller
         ]);
 
         $data = $validated;
+        $data['user_id'] = auth()->id();
 
         // Upload foto bertemu
         if ($request->hasFile('foto_bertemu')) {

@@ -41,8 +41,9 @@ class LoginController extends Controller
     protected function redirectTo()
     {
         session()->flash('success', 'You are logged in!');
-        if (auth()->user()->isUser()) {
-            return '/rental-info';
+        $user = auth()->user();
+        if ($user && $user->isUser() && !$user->hasActiveRental()) {
+            return route('rental.status');
         }
         return $this->redirectTo;
     }

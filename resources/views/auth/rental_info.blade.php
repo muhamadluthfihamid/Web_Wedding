@@ -25,7 +25,7 @@
 
         <div class="text-center my-6 space-y-4">
             <p class="text-sm font-semibold text-slate-800">Hubungi Kami Untuk Aktivasi Sewa:</p>
-            <a href="https://wa.me/6281234567890?text=Halo%20Admin,%20saya%20ingin%20mengaktifkan%20sewa%20undangan%20saya%20dengan%20email%20{{ urlencode(Auth::user()->email) }}" target="_blank"
+            <a href="https://wa.me/{{ config('app.admin_wa') }}?text=Halo%20Admin,%20saya%20ingin%20mengaktifkan%20sewa%20undangan%20saya%20dengan%20email%20{{ urlencode(Auth::user()->email) }}" target="_blank"
                 class="inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-lg shadow-sm text-base font-semibold text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors gap-2">
                 <i class="fab fa-whatsapp text-lg"></i> Hubungi via WhatsApp
             </a>

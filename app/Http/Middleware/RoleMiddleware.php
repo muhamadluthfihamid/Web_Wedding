@@ -20,9 +20,9 @@ class RoleMiddleware
         }
 
         if (!$request->user()->hasRole($roles)) {
-            // Redirect standard 'user' role away from admin pages to a client/rental info page
-            if ($request->user()->isUser() && $request->is('admin*')) {
-                return redirect()->route('rental.info');
+            // Redirect standard unapproved 'user' role away from admin pages to a client/rental info page
+            if ($request->user()->isUser() && !$request->user()->hasActiveRental() && $request->is('admin*')) {
+                return redirect()->route('rental.status');
             }
 
             abort(403, 'Unauthorized action.');

@@ -14,6 +14,7 @@ class Info extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'user_id',
         'nama_pengantin_istri',
         'nama_pengantin_pria',
         'tanggal_pernikahan',
@@ -23,11 +24,28 @@ class Info extends Model
         'alamat',
         'deskripsi',
         'latitude',
-        'longtitude'
+        'longitude',
+        'teks_arab',
+        'salam_pembuka',
+        'teks_pembuka',
+        'teks_penutup',
+        'salam_penutup',
+        'musik_url',
+        'is_audio_active',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    protected $casts = [
+        'tanggal_pernikahan' => 'date:Y-m-d',
+        'is_audio_active'    => 'boolean',
     ];
     public function galleries()
     {
-        return $this->hasMany(Gallery::class, 'info_id');
+        return $this->hasMany(Gallery::class, 'id_nama_pengantin_pria');
     }
 
 }

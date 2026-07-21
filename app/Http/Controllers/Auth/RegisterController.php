@@ -76,8 +76,9 @@ class RegisterController extends Controller
 
     protected function redirectTo()
     {
-        if (auth()->user()->isUser()) {
-            return '/rental-info';
+        $user = auth()->user();
+        if ($user && $user->isUser() && !$user->hasActiveRental()) {
+            return route('rental.status');
         }
         return $this->redirectTo;
     }

@@ -25,6 +25,9 @@
                     @endif
                     <a class="nav-link" href="#rsvp" onclick="closeOffcanvas()"><i class="bi bi-chat-left-heart me-1"></i> RSVP</a>
                     <a class="nav-link" href="#gifts" onclick="closeOffcanvas()"><i class="bi bi-gift me-1"></i> Gifts</a>
+                    @if(isset($turutMengundangs) && $turutMengundangs->count() > 0)
+                        <a class="nav-link" href="#turut-mengundang" onclick="closeOffcanvas()"><i class="bi bi-people me-1"></i> Turut Mengundang</a>
+                    @endif
                 </div>
             </div>
         </div>

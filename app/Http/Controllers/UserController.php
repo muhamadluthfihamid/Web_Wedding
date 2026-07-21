@@ -127,4 +127,25 @@ class UserController extends Controller
 
         return redirect()->route('users.index')->with('success', 'User berhasil dihapus.');
     }
+    public function resetPassword(Request $request, string $id)
+    {
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'new_password'              => ['required', 'string', 'min:8', 'confirmed'],
+            'new_password_confirmation' => ['required'],
+        ]);
+
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Password user berhasil direset.',
+            ]);
+        }
+
+        return redirect()->route('users.index')->with('success', 'Password user berhasil direset.');
+    }
 }

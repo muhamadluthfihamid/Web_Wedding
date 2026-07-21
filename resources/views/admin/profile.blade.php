@@ -7,14 +7,6 @@
         <p class="text-sm text-slate-500 mt-1">Kelola informasi profil dan keamanan akun Anda</p>
     </div>
 
-    @if (session('success'))
-        <div class="mb-6 bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-r-xl shadow-sm" role="alert">
-            <div class="flex items-center gap-3">
-                <i class="fas fa-check-circle text-emerald-500 text-lg"></i>
-                <p class="text-sm font-medium text-emerald-800">{{ session('success') }}</p>
-            </div>
-        </div>
-    @endif
 
     @if ($errors->any())
         <div class="mb-6 bg-rose-50 border-l-4 border-rose-500 p-4 rounded-r-lg shadow-sm" role="alert">

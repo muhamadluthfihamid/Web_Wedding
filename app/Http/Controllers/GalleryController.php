@@ -12,13 +12,18 @@ class GalleryController extends Controller
 {
     public function index()
     {
-        $galeries = Gallery::with(['images', 'pria', 'istri'])->get();
+        $user = auth()->user();
+        $galeries = $user->isSuperAdmin()
+            ? Gallery::with(['images', 'pria', 'istri'])->get()
+            : Gallery::where('user_id', $user->id)->with(['images', 'pria', 'istri'])->get();
+
         return view('admin.gallery.index', compact('galeries'));
     }
 
     public function create()
     {
-        $infos = Info::all();
+        $user = auth()->user();
+        $infos = $user->isSuperAdmin() ? Info::all() : Info::where('user_id', $user->id)->get();
         return view('admin.gallery.create', compact('infos'));
     }
 
@@ -35,6 +40,7 @@ class GalleryController extends Controller
 
         try {
             $gallery = Gallery::create([
+                'user_id' => auth()->id(),
                 'id_nama_pengantin_istri' => $request->id_nama_pengantin_istri,
                 'id_nama_pengantin_pria' => $request->id_nama_pengantin_pria,
                 'deskripsi' => $request->deskripsi,

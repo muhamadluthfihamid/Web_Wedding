@@ -51,30 +51,51 @@
 
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 mb-1">Tanggal Pernikahan<span class="text-rose-500">*</span></label>
-                            <input type="date" name="tanggal_pernikahan" value="{{ old('tanggal_pernikahan', $info->tanggal_pernikahan) }}" required
+                            <input type="date" name="tanggal_pernikahan" value="{{ old('tanggal_pernikahan', $info->tanggal_pernikahan ? \Carbon\Carbon::parse($info->tanggal_pernikahan)->format('Y-m-d') : '') }}" required
                                    class="block w-full px-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all">
                         </div>
 
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 mb-1">Alamat Acara<span class="text-rose-500">*</span></label>
-                            <textarea id="alamat" name="alamat" rows="2" required
+                            <textarea id="alamat" name="alamat" rows="2" required placeholder="Masukkan alamat lengkap acara..."
                                       class="block w-full px-3 py-2 border border-slate-200 rounded-lg text-slate-950 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all">{{ old('alamat', $info->alamat) }}</textarea>
-                            <button type="button" id="cariLokasi" 
-                                    class="mt-2 inline-flex items-center justify-center gap-1.5 px-3 py-1.5 border border-transparent rounded-lg text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors shadow-sm">
-                                <i class="fas fa-search"></i> Cari Koordinat Peta
-                            </button>
+                            
+                            <div class="mt-2 flex flex-wrap gap-2">
+                                <button type="button" id="cariLokasi" 
+                                        class="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 border border-transparent rounded-lg text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors shadow-sm">
+                                    <i class="fas fa-search"></i> Cari dari Alamat Teks
+                                </button>
+                                <button type="button" id="btnTogglePaste"
+                                        class="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 transition-colors shadow-sm">
+                                    <i class="fas fa-paste text-indigo-500"></i> Tempel Koordinat Google Maps
+                                </button>
+                            </div>
+
+                            <!-- Input Tempel Koordinat -->
+                            <div id="pasteCoordsBox" class="hidden mt-3 p-3 bg-indigo-50/70 border border-indigo-100 rounded-xl space-y-2">
+                                <label class="block text-xs font-bold text-indigo-900">Tempel Koordinat Google Maps (lat, lng):</label>
+                                <div class="flex gap-2">
+                                    <input type="text" id="pasteCoordsInput" placeholder="Contoh: -6.200000, 106.816666 atau link maps" 
+                                           class="flex-1 px-3 py-1.5 bg-white border border-indigo-200 rounded-lg text-xs font-mono text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    <button type="button" id="applyPasteCoords" 
+                                            class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xs font-semibold hover:bg-indigo-700 transition-colors">
+                                        Terapkan
+                                    </button>
+                                </div>
+                                <p class="text-[11px] text-indigo-600">Tip: Buka Google Maps, klik kanan/tahan titik lokasi acara Anda, lalu salin angka koordinat (contoh: <code>-6.914744, 107.609810</code>) dan tempel di sini.</p>
+                            </div>
                         </div>
 
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-semibold text-slate-500 mb-1">Latitude</label>
-                                <input type="text" name="latitude" id="latitude" value="{{ old('latitude', $info->latitude) }}" readonly
-                                       class="block w-full px-3 py-2 border border-slate-100 bg-slate-50 text-slate-500 rounded-lg font-mono sm:text-xs">
+                                <input type="text" name="latitude" id="latitude" value="{{ old('latitude', $info->latitude) }}"
+                                       class="block w-full px-3 py-2 border border-slate-200 bg-white text-slate-900 rounded-lg font-mono sm:text-xs focus:ring-2 focus:ring-indigo-500">
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-slate-500 mb-1">Longitude</label>
-                                <input type="text" name="longitude" id="longitude" value="{{ old('longitude', $info->longitude) }}" readonly
-                                       class="block w-full px-3 py-2 border border-slate-100 bg-slate-50 text-slate-500 rounded-lg font-mono sm:text-xs">
+                                <input type="text" name="longitude" id="longitude" value="{{ old('longitude', $info->longitude) }}"
+                                       class="block w-full px-3 py-2 border border-slate-200 bg-white text-slate-900 rounded-lg font-mono sm:text-xs focus:ring-2 focus:ring-indigo-500">
                             </div>
                         </div>
                     </div>
@@ -84,19 +105,19 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-semibold text-slate-700 mb-1">Mulai Akad<span class="text-rose-500">*</span></label>
-                                <input type="time" name="mulai_akad" value="{{ old('mulai_akad', $info->mulai_akad) }}" required
+                                <input type="time" name="mulai_akad" value="{{ old('mulai_akad', \Illuminate\Support\Str::substr($info->mulai_akad, 0, 5)) }}" required
                                        class="block w-full px-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all">
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold text-slate-700 mb-1">Selesai Akad<span class="text-rose-500">*</span></label>
-                                <input type="time" name="selesai_akad" value="{{ old('selesai_akad', $info->selesai_akad) }}" required
+                                <input type="time" name="selesai_akad" value="{{ old('selesai_akad', \Illuminate\Support\Str::substr($info->selesai_akad, 0, 5)) }}" required
                                        class="block w-full px-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all">
                             </div>
                         </div>
 
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 mb-1">Mulai Resepsi<span class="text-rose-500">*</span></label>
-                            <input type="time" name="mulai_resepsi" value="{{ old('mulai_resepsi', $info->mulai_resepsi) }}" required
+                            <input type="time" name="mulai_resepsi" value="{{ old('mulai_resepsi', \Illuminate\Support\Str::substr($info->mulai_resepsi, 0, 5)) }}" required
                                    class="block w-full px-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all">
                         </div>
 
@@ -108,9 +129,66 @@
                     </div>
                 </div>
 
-                <!-- Google Map Preview -->
-                <div class="space-y-2">
-                    <label class="block text-sm font-semibold text-slate-700">Preview Peta Lokasi (Geser marker merah untuk menyesuaikan koordinat):</label>
+                <!-- Section Doa & Salam (Support Bahasa Arab) -->
+                <div class="border-t border-slate-100 pt-6 space-y-4">
+                    <div class="bg-indigo-50/50 p-4 rounded-xl border border-indigo-100 mb-4">
+                        <h4 class="text-md font-bold text-indigo-900 flex items-center gap-2">
+                            <i class="fas fa-quran text-indigo-600"></i> Konten Doa & Salam (Suport Bahasa Arab)
+                        </h4>
+                        <p class="text-xs text-indigo-700 mt-1">Anda dapat me-custom teks ucapan, salam, dan ayat/kaligrafi Arab yang akan tampil di halaman undangan. Jika dikosongkan, teks default akan digunakan.</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Teks Arab / Kaligrafi / Ayat Doa (Suport Bahasa Arab):</label>
+                        <textarea name="teks_arab" rows="2" dir="rtl" placeholder="بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"
+                                  class="block w-full px-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg font-serif transition-all">{{ old('teks_arab', $info->teks_arab ?? 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ') }}</textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Salam Pembuka:</label>
+                            <input type="text" name="salam_pembuka" value="{{ old('salam_pembuka', $info->salam_pembuka ?? "Assalamu'alaikum Warahmatullahi Wabarakatuh") }}"
+                                   class="block w-full px-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Salam Penutup:</label>
+                            <input type="text" name="salam_penutup" value="{{ old('salam_penutup', $info->salam_penutup ?? "Wassalamu'alaikum Warahmatullahi Wabarakatuh") }}"
+                                   class="block w-full px-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Teks Pembuka (Paragraf 1):</label>
+                        <textarea name="teks_pembuka" rows="3" placeholder="Dengan memohon rahmat dan ridho Allah SWT..."
+                                  class="block w-full px-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all">{{ old('teks_pembuka', $info->teks_pembuka ?? 'Dengan memohon rahmat dan ridho Allah SWT yang telah menciptakan Makhluk-Nya secara berpasang-pasangan, kami bermaksud menyelenggarakan acara Walimatul Ursy.') }}</textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Teks Penutup (Paragraf 2):</label>
+                        <textarea name="teks_penutup" rows="3" placeholder="Kami memohon do'a restu agar menjadi keluarga..."
+                                  class="block w-full px-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all">{{ old('teks_penutup', $info->teks_penutup ?? 'Kami memohon do\'a restu agar menjadi keluarga yang Sakinah Mawaddah Warahmah. Atas perhatiannya, kami ucapkan terimakasih.') }}</textarea>
+                    </div>
+                </div>
+
+                <!-- Google Map Preview & Direct Search -->
+                <div class="space-y-3">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <label class="block text-sm font-semibold text-slate-700">Preview Peta Lokasi (Geser marker merah atau klik di mana saja pada peta):</label>
+                    </div>
+
+                    <!-- Direct Search Bar Above Map -->
+                    <div class="relative">
+                        <div class="flex gap-2">
+                            <input type="text" id="mapSearchInput" placeholder="Cari nama gedung, jalan, atau lokasi di sini (misal: Gedung Kartika Bandung)..." 
+                                   class="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <button type="button" id="btnMapSearch" 
+                                    class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors flex items-center gap-1.5 flex-shrink-0">
+                                <i class="fas fa-search"></i> Cari Peta
+                            </button>
+                        </div>
+                        <div id="searchResults" class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-[9999] max-h-60 overflow-y-auto divide-y divide-slate-100 text-sm"></div>
+                    </div>
+
                     <div id="map" class="h-80 w-full rounded-xl border border-slate-200 shadow-inner overflow-hidden"></div>
                 </div>
 
@@ -142,29 +220,28 @@
         const defaultLng = parseFloat(document.getElementById('longitude').value) || 106.816666;
 
         // Init Leaflet Map
-        const map = L.map('map').setView([defaultLat, defaultLng], 15);
+        const map = L.map('map').setView([defaultLat, defaultLng], 16);
 
-        // OpenStreetMap tiles (100% gratis)
+        // OpenStreetMap tiles
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            attribution: '&copy; OpenStreetMap',
             maxZoom: 19
         }).addTo(map);
 
-        // Draggable Marker - posisi awal dari data tersimpan
+        // Draggable Marker
         const marker = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(map);
 
-        // Tampilkan popup koordinat saat halaman dimuat (jika sudah ada koordinat)
         if (document.getElementById('latitude').value) {
-            marker.bindPopup('<b>Lokasi tersimpan</b><br>Seret marker untuk mengubah.').openPopup();
+            marker.bindPopup(`<b>Lokasi tersimpan:</b><br>${defaultLat.toFixed(6)}, ${defaultLng.toFixed(6)}`).openPopup();
         }
 
-        // Update koordinat saat marker digeser
+        // Update coordinates when marker is dragged
         marker.on('dragend', function (e) {
             const { lat, lng } = e.target.getLatLng();
             setLatLng(lat, lng);
         });
 
-        // Update koordinat saat klik peta
+        // Update coordinates when map is clicked
         map.on('click', function (e) {
             const { lat, lng } = e.latlng;
             marker.setLatLng([lat, lng]);
@@ -172,44 +249,160 @@
         });
 
         function setLatLng(lat, lng) {
-            document.getElementById('latitude').value = lat.toFixed(6);
-            document.getElementById('longitude').value = lng.toFixed(6);
+            document.getElementById('latitude').value = lat.toFixed(7);
+            document.getElementById('longitude').value = lng.toFixed(7);
         }
 
-        // Geocoding via Nominatim (OpenStreetMap) - GRATIS, tanpa API key
+        // Manual coordinate input change handler
+        document.getElementById('latitude').addEventListener('change', updateMapFromInputs);
+        document.getElementById('longitude').addEventListener('change', updateMapFromInputs);
+
+        function updateMapFromInputs() {
+            const lat = parseFloat(document.getElementById('latitude').value);
+            const lng = parseFloat(document.getElementById('longitude').value);
+            if (!isNaN(lat) && !isNaN(lng)) {
+                map.setView([lat, lng], 17);
+                marker.setLatLng([lat, lng]);
+                marker.bindPopup(`<b>Koordinat:</b><br>${lat.toFixed(7)}, ${lng.toFixed(7)}`).openPopup();
+            }
+        }
+
+        // Toggle Paste Coords Box
+        const btnTogglePaste = document.getElementById('btnTogglePaste');
+        if (btnTogglePaste) {
+            btnTogglePaste.addEventListener('click', function() {
+                const box = document.getElementById('pasteCoordsBox');
+                box.classList.toggle('hidden');
+            });
+        }
+
+        // Apply Paste Coords
+        const applyPasteBtn = document.getElementById('applyPasteCoords');
+        if (applyPasteBtn) {
+            applyPasteBtn.addEventListener('click', function() {
+                const val = document.getElementById('pasteCoordsInput').value.trim();
+                const match = val.match(/(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/);
+                if (match) {
+                    const lat = parseFloat(match[1]);
+                    const lng = parseFloat(match[2]);
+                    map.setView([lat, lng], 17);
+                    marker.setLatLng([lat, lng]);
+                    setLatLng(lat, lng);
+                    marker.bindPopup(`<b>Koordinat Google Maps:</b><br>${lat.toFixed(7)}, ${lng.toFixed(7)}`).openPopup();
+                } else {
+                    alert('Format koordinat tidak valid. Gunakan contoh: -6.200000, 106.816666');
+                }
+            });
+        }
+
+        // Multi-stage Geocoding
         document.getElementById('cariLokasi').addEventListener('click', function () {
             const alamat = document.getElementById('alamat').value.trim();
-            if (!alamat) {
-                alert('Masukkan alamat terlebih dahulu.');
+            performGeocode(alamat, this);
+        });
+
+        document.getElementById('btnMapSearch').addEventListener('click', function () {
+            const query = document.getElementById('mapSearchInput').value.trim();
+            performGeocode(query, this);
+        });
+
+        document.getElementById('mapSearchInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                performGeocode(this.value.trim(), document.getElementById('btnMapSearch'));
+            }
+        });
+
+        function performGeocode(query, btn) {
+            if (!query) {
+                alert('Masukkan alamat atau nama lokasi terlebih dahulu.');
                 return;
             }
 
-            const btn = this;
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mencari...';
+            const originalHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mencari...';
+            }
 
-            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(alamat)}&limit=1&countrycodes=id`;
+            const searchResultsEl = document.getElementById('searchResults');
+            searchResultsEl.innerHTML = '';
+            searchResultsEl.classList.add('hidden');
 
-            fetch(url, { headers: { 'Accept-Language': 'id' } })
+            function cleanQuery(str) {
+                return str
+                    .replace(/\b(rt|rw|no|nomor|gang|gg|blok|kav|kavling)\b\.?\s*\w+/gi, '')
+                    .replace(/[\/\#\-\,\.]/g, ' ')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+            }
+
+            const q1 = query.trim();
+            const q2 = cleanQuery(query);
+
+            const url1 = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q1)}&limit=5&countrycodes=id`;
+
+            fetch(url1, { headers: { 'Accept-Language': 'id' } })
                 .then(res => res.json())
                 .then(data => {
-                    if (data.length > 0) {
-                        const lat = parseFloat(data[0].lat);
-                        const lng = parseFloat(data[0].lon);
-                        map.setView([lat, lng], 16);
-                        marker.setLatLng([lat, lng]);
-                        setLatLng(lat, lng);
-                        marker.bindPopup(`<b>${data[0].display_name}</b>`).openPopup();
+                    if (data && data.length > 0) {
+                        renderSearchResults(data);
+                    } else if (q2 && q2 !== q1) {
+                        const url2 = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q2)}&limit=5&countrycodes=id`;
+                        return fetch(url2, { headers: { 'Accept-Language': 'id' } })
+                            .then(res => res.json())
+                            .then(data2 => {
+                                if (data2 && data2.length > 0) {
+                                    renderSearchResults(data2);
+                                } else {
+                                    alert('Alamat/lokasi tidak ditemukan secara otomatis. Silakan cari nama tempat/kota di kolom pencarian peta di atas, atau klik langsung posisi acara pada peta.');
+                                }
+                            });
                     } else {
-                        alert('Alamat tidak ditemukan. Coba masukkan nama jalan, kota, atau kecamatan yang lebih spesifik.');
+                        alert('Alamat/lokasi tidak ditemukan secara otomatis. Silakan cari nama tempat/kota di kolom pencarian peta di atas, atau klik langsung posisi acara pada peta.');
                     }
                 })
                 .catch(() => alert('Gagal terhubung ke layanan peta. Periksa koneksi internet Anda.'))
                 .finally(() => {
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-search"></i> Cari Koordinat Peta';
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = originalHtml;
+                    }
                 });
-        });
+        }
+
+        function renderSearchResults(results) {
+            const searchResultsEl = document.getElementById('searchResults');
+            searchResultsEl.innerHTML = '';
+
+            if (results.length === 1) {
+                applyResult(results[0]);
+                return;
+            }
+
+            results.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'px-4 py-2.5 hover:bg-indigo-50 cursor-pointer transition-colors flex items-center justify-between text-slate-800 text-xs';
+                div.innerHTML = `<div><i class="fas fa-map-marker-alt text-rose-500 mr-2"></i><strong>${item.display_name}</strong></div><span class="text-indigo-600 font-semibold text-[11px]">Pilih →</span>`;
+                div.addEventListener('click', function() {
+                    applyResult(item);
+                    searchResultsEl.classList.add('hidden');
+                });
+                searchResultsEl.appendChild(div);
+            });
+
+            searchResultsEl.classList.remove('hidden');
+            applyResult(results[0]);
+        }
+
+        function applyResult(item) {
+            const lat = parseFloat(item.lat);
+            const lng = parseFloat(item.lon);
+            map.setView([lat, lng], 17);
+            marker.setLatLng([lat, lng]);
+            setLatLng(lat, lng);
+            marker.bindPopup(`<b>${item.display_name}</b>`).openPopup();
+        }
     });
 </script>
 @endpush

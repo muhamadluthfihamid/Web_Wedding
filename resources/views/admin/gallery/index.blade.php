@@ -8,11 +8,7 @@
             <a class="btn btn-primary" href="{{ route('gallery.create') }}" title="Create" role="button"><ion-icon
                     name="add-outline" size="small"></ion-icon></a>
         </div>
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
+
     </div>
     <div class="row justify-content-center">
         <div class="col-lg-12">
@@ -50,7 +46,7 @@
                                 <td>{{ $gallery->deskripsi }}</td>
                                 <td>
                                     <a href="{{ route('gallery.edit', $gallery->id) }}" class="btn btn-warning">Edit</a>
-                                    <button class="btn btn-danger" onclick="confirmDelete({{ $gallery->id }})">
+                                    <button class="btn btn-danger btn-delete" data-id="{{ $gallery->id }}">
                                         Delete
                                     </button>
                                     <form id="delete-form-{{ $gallery->id }}"
@@ -73,22 +69,27 @@
     </div>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        function confirmDelete(id) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('delete-form-' + id).submit();
-                }
-            })
-        }
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.btn-delete').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var id = this.dataset.id;
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: 'Data gallery akan dihapus secara permanen!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#6b7280',
+                        confirmButtonText: 'Ya, Hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then(function (result) {
+                        if (result.isConfirmed) {
+                            document.getElementById('delete-form-' + id).submit();
+                        }
+                    });
+                });
+            });
+        });
     </script>
 @endsection

@@ -46,13 +46,6 @@
         </div>
     </div>
 
-    <!-- Alert Success -->
-    @if(session('success'))
-        <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-sm font-medium flex items-center gap-2">
-            <i class="fas fa-check-circle text-emerald-500 text-lg"></i>
-            {{ session('success') }}
-        </div>
-    @endif
 
     <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
@@ -80,7 +73,8 @@
                     @else
                         @foreach ($guests as $guest)
                              @php
-                                $weddingUrl = url('/') . '/?to=' . rawurlencode($guest->nama);
+                                $baseUrl = Auth::user()->slug ? url('/undangan/' . Auth::user()->slug) : url('/');
+                                $weddingUrl = $baseUrl . '?to=' . rawurlencode($guest->nama);
                                 $waMessage = "Tanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i *" . $guest->nama . "* untuk menghadiri acara pernikahan kami.\n\nDetail dan undangan digital dapat diakses melalui link di bawah ini:\n" . $weddingUrl . "\n\nMerupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu kepada kami.\n\nTerima kasih.";
                                 $waLink = $guest->no_hp 
                                     ? "https://api.whatsapp.com/send?phone=" . preg_replace('/[^0-9]/', '', $guest->no_hp) . "&text=" . rawurlencode($waMessage)
@@ -122,12 +116,16 @@
                                            class="inline-flex items-center gap-1 px-2.5 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg text-xs font-semibold transition-colors">
                                             <i class="fas fa-share-alt"></i> Share
                                         </button>
-                                        <button onclick="openEditModal({{ $guest->id }}, '{{ addslashes($guest->nama) }}', '{{ $guest->no_hp }}', '{{ addslashes($guest->keterangan) }}')" 
-                                           class="inline-flex items-center gap-1 px-2.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg text-xs font-semibold transition-colors">
+                                        <button
+                                            class="btn-edit inline-flex items-center gap-1 px-2.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg text-xs font-semibold transition-colors"
+                                            data-id="{{ $guest->id }}"
+                                            data-nama="{{ addslashes($guest->nama) }}"
+                                            data-no_hp="{{ $guest->no_hp }}"
+                                            data-keterangan="{{ addslashes($guest->keterangan) }}">
                                             <i class="fas fa-edit"></i> Edit
                                         </button>
-                                        <button class="inline-flex items-center gap-1 px-2.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg text-xs font-semibold transition-colors" 
-                                                onclick="confirmDelete({{ $guest->id }})">
+                                        <button class="btn-delete inline-flex items-center gap-1 px-2.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg text-xs font-semibold transition-colors"
+                                                data-id="{{ $guest->id }}">
                                             <i class="fas fa-trash"></i> Hapus
                                         </button>
                                     </div>
@@ -264,7 +262,6 @@
     </div>
 
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         // Copy to clipboard helper
         function copyToClipboard(text) {
@@ -282,23 +279,39 @@
             });
         }
 
-        // Delete confirmation
-        function confirmDelete(id) {
-            Swal.fire({
-                title: 'Apakah Anda yakin?',
-                text: "Data tamu ini akan dihapus secara permanen!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, Hapus!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('delete-form-' + id).submit();
-                }
-            })
-        }
+        // Delete confirmation (event delegation via data-id)
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.btn-delete').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var id = this.dataset.id;
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: 'Data tamu ini akan dihapus secara permanen!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Ya, Hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then(function (result) {
+                        if (result.isConfirmed) {
+                            document.getElementById('delete-form-' + id).submit();
+                        }
+                    });
+                });
+            });
+
+            document.querySelectorAll('.btn-edit').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    openEditModal(
+                        this.dataset.id,
+                        this.dataset.nama,
+                        this.dataset.no_hp,
+                        this.dataset.keterangan
+                    );
+                });
+            });
+        });
 
         // Modal triggers
         function openAddModal() {

@@ -2,41 +2,43 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
+use App\Models\Rsvp;
 use App\Models\User;
+use App\Models\Wish;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('auth');
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
     public function index()
     {
-        $users = User::count();
-        $totalRsvps = \App\Models\Rsvp::count();
-        $totalWishes = \App\Models\Wish::count();
-        $totalAttendingGuests = \App\Models\Rsvp::where('kehadiran', 1)->sum('jumlah');
-        $confirmedAttending = \App\Models\Rsvp::where('kehadiran', 1)->count();
-        $confirmedNotAttending = \App\Models\Rsvp::where('kehadiran', 0)->count();
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        // User biasa tanpa sewa aktif → redirect ke informasi rental
+        if ($user && $user->isUser() && !$user->hasActiveRental()) {
+            return redirect()->route('rental.info');
+        }
+
+        // Admin penyewa & Superadmin stats
+        $totalRsvps            = Rsvp::all()->count();
+        $totalWishes           = Wish::all()->count();
+        $totalAttendingGuests  = Rsvp::where('kehadiran', 1)->get()->sum('jumlah');
+        $confirmedAttending    = Rsvp::where('kehadiran', 1)->get()->count();
+        $confirmedNotAttending = Rsvp::where('kehadiran', 0)->get()->count();
 
         $widget = [
-            'users' => $users,
-            'totalRsvps' => $totalRsvps,
-            'totalWishes' => $totalWishes,
-            'totalAttendingGuests' => $totalAttendingGuests,
-            'confirmedAttending' => $confirmedAttending,
+            'users'                 => User::all()->count(),
+            'totalRsvps'            => $totalRsvps,
+            'totalWishes'           => $totalWishes,
+            'totalAttendingGuests'  => $totalAttendingGuests,
+            'confirmedAttending'    => $confirmedAttending,
             'confirmedNotAttending' => $confirmedNotAttending,
         ];
 

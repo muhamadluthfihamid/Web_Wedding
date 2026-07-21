@@ -9,6 +9,7 @@ class BiodataWanita extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'user_id',
         'nama',
         'ibu',
         'bapak',

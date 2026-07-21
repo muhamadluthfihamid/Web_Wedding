@@ -147,6 +147,9 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'admin_wa' => env('ADMIN_WA_NUMBER', '6281234567890'),
+
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
