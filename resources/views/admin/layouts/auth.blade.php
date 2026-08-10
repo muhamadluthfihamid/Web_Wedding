@@ -32,10 +32,92 @@
     <link href="{{ asset('img/favicon.png') }}" rel="icon" type="image/png">
 </head>
 <body class="h-full">
+    @include('components.preloader')
 
 <div class="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gradient-to-tr from-slate-100 via-slate-50 to-indigo-50/30">
     @yield('main-content')
 </div>
+
+<!-- SweetAlert2 (global) -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Global Flash Message Alert -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const flashSuccess = {!! json_encode(session('success')) !!};
+        const flashError   = {!! json_encode(session('error')) !!};
+        const flashWarning = {!! json_encode(session('warning')) !!};
+        const flashInfo    = {!! json_encode(session('info')) !!};
+
+        if (flashSuccess) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: flashSuccess,
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3500,
+                timerProgressBar: true,
+                customClass: {
+                    popup: 'text-sm',
+                    title: 'text-base font-bold',
+                }
+            });
+        }
+
+        if (flashError) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: flashError,
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true,
+                customClass: {
+                    popup: 'text-sm',
+                    title: 'text-base font-bold',
+                }
+            });
+        }
+
+        if (flashWarning) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Perhatian!',
+                text: flashWarning,
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true,
+                customClass: {
+                    popup: 'text-sm',
+                    title: 'text-base font-bold',
+                }
+            });
+        }
+
+        if (flashInfo) {
+            Swal.fire({
+                icon: 'info',
+                title: 'Info',
+                text: flashInfo,
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3500,
+                timerProgressBar: true,
+                customClass: {
+                    popup: 'text-sm',
+                    title: 'text-base font-bold',
+                }
+            });
+        }
+    });
+</script>
 
 @stack('scripts')
 </body>

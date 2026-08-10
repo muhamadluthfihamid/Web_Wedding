@@ -7,8 +7,8 @@
             <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Musik / Audio Undangan</h1>
             <p class="text-sm text-slate-500 mt-1">Atur musik latar belakang (backsound) yang diputar di website undangan Anda</p>
         </div>
-        @if($info->user && $info->user->slug)
-            <a href="{{ route('undangan.show', $info->user->slug) }}" target="_blank"
+        @if($info->user)
+            <a href="{{ route('undangan.show', $info->user->getOrGenerateSlug()) }}" target="_blank"
                class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 text-sm font-semibold rounded-xl transition-colors">
                 <i class="fas fa-play text-emerald-600"></i> Tes Dengar di Undangan
             </a>
@@ -111,23 +111,71 @@
 
                         <!-- Content 1: Preset Selection -->
                         <div id="section-preset" class="space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
-                            <label class="block text-sm font-semibold text-slate-800">Pilih dari Lagu Pernikahan Populer:</label>
+                            <div class="flex items-center justify-between">
+                                <label class="block text-sm font-semibold text-slate-800">Pilih dari Playlist Lagu Pernikahan:</label>
+                                <span class="text-xs font-medium text-slate-500 bg-white px-2.5 py-1 rounded-md border border-slate-200">{{ count($presets) }} Pilihan Lagu</span>
+                            </div>
+
+                            @if(auth()->user() && auth()->user()->isSuperAdmin())
+                                <!-- Super Admin Add Preset Box -->
+                                <div class="p-4 bg-indigo-50/90 border border-indigo-200 rounded-xl space-y-3">
+                                    <div class="flex items-center justify-between">
+                                        <h4 class="text-xs font-bold text-indigo-900 uppercase tracking-wider flex items-center gap-1.5">
+                                            <i class="fas fa-plus-circle text-indigo-600"></i> Tambah Preset Ke Playlist Sistem (Super Admin)
+                                        </h4>
+                                        <span class="text-[10px] font-semibold text-indigo-600 bg-indigo-100 px-2 py-0.5 rounded">Tampil untuk Semua User</span>
+                                    </div>
+                                    <form action="{{ route('audio.storePreset') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
+                                        @csrf
+                                        <div class="sm:col-span-5">
+                                            <label class="block text-xs font-semibold text-slate-700 mb-1">Judul / Nama Lagu:</label>
+                                            <input type="text" name="preset_name" required placeholder="Contoh: Janji Suci Acoustic" class="block w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs bg-white text-slate-900 focus:ring-2 focus:ring-indigo-500">
+                                        </div>
+                                        <div class="sm:col-span-4">
+                                            <label class="block text-xs font-semibold text-slate-700 mb-1">File Audio (Max 15MB):</label>
+                                            <input type="file" name="preset_file" accept="audio/mp3,audio/wav,audio/ogg,audio/m4a" required class="block w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 cursor-pointer border border-slate-300 rounded-lg bg-white">
+                                        </div>
+                                        <div class="sm:col-span-3">
+                                            <button type="submit" class="w-full px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg shadow-sm transition-colors flex items-center justify-center gap-1.5">
+                                                <i class="fas fa-plus"></i> Tambah Preset
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            @endif
+
                             @if(count($presets) > 0)
-                                <div class="space-y-2">
+                                <div class="space-y-2 max-h-[420px] overflow-y-auto pr-1">
                                     @foreach($presets as $preset)
-                                        <label class="flex items-center justify-between p-3 bg-white rounded-lg border border-slate-200 hover:border-indigo-300 cursor-pointer transition-all">
+                                        <label class="flex items-center justify-between p-3 bg-white rounded-xl border border-slate-200 hover:border-indigo-300 cursor-pointer transition-all">
                                             <div class="flex items-center gap-3">
                                                 <input type="radio" name="preset_audio" value="{{ $preset['path'] }}" class="text-indigo-600 focus:ring-indigo-500"
                                                        {{ old('preset_audio', $info->musik_url ?? 'assets/audio/Bi Saraha.mp3') === $preset['path'] ? 'checked' : '' }}>
                                                 <div>
-                                                    <span class="text-sm font-semibold text-slate-800">{{ $preset['name'] }}</span>
-                                                    <span class="text-xs text-slate-400 block">{{ $preset['filename'] }}</span>
+                                                    <div class="flex items-center gap-2 flex-wrap">
+                                                        <span class="text-sm font-semibold text-slate-800">{{ $preset['name'] }}</span>
+                                                        @if(isset($preset['category']))
+                                                            <span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100">{{ $preset['category'] }}</span>
+                                                        @endif
+                                                    </div>
+                                                    <span class="text-xs text-slate-400 block truncate max-w-[200px] sm:max-w-[320px]">{{ $preset['filename'] }}</span>
                                                 </div>
                                             </div>
-                                            <button type="button" data-path="{{ asset($preset['path']) }}" data-name="{{ $preset['name'] }}"
-                                                    class="btn-play-preset p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors">
-                                                <i class="fas fa-play"></i> Putar
-                                            </button>
+                                            <div class="flex items-center gap-1 flex-shrink-0">
+                                                <button type="button" data-path="{{ str_starts_with($preset['path'], 'http') ? $preset['path'] : asset($preset['path']) }}" data-name="{{ $preset['name'] }}"
+                                                        class="btn-play-preset p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors"
+                                                        title="Putar Pratinjau">
+                                                    <i class="fas fa-play"></i> Putar
+                                                </button>
+
+                                                @if(auth()->user() && auth()->user()->isSuperAdmin() && str_starts_with($preset['path'], 'assets/audio/'))
+                                                    <button type="button" onclick="confirmDeletePreset('{{ $preset['filename'] }}')"
+                                                            class="p-2 text-rose-500 hover:bg-rose-50 rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors"
+                                                            title="Hapus preset ini dari playlist sistem">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                @endif
+                                            </div>
                                         </label>
                                     @endforeach
                                 </div>
@@ -135,6 +183,22 @@
                                 <p class="text-xs text-slate-500 italic">Belum ada preset lagu di server.</p>
                             @endif
                         </div>
+
+                        @if(auth()->user() && auth()->user()->isSuperAdmin())
+                            <form id="delete-preset-form" action="{{ route('audio.destroyPreset') }}" method="POST" class="hidden">
+                                @csrf
+                                @method('DELETE')
+                                <input type="hidden" name="filename" id="delete-preset-filename">
+                            </form>
+                            <script>
+                                function confirmDeletePreset(filename) {
+                                    if (confirm('Apakah Anda yakin ingin menghapus preset "' + filename + '" dari playlist sistem?')) {
+                                        document.getElementById('delete-preset-filename').value = filename;
+                                        document.getElementById('delete-preset-form').submit();
+                                    }
+                                }
+                            </script>
+                        @endif
 
                         <!-- Content 2: Upload MP3 Custom -->
                         <div id="section-upload" class="space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-200 hidden">

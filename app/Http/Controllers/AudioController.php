@@ -41,14 +41,26 @@ class AudioController extends Controller
         // Ambil daftar preset musik di public/assets/audio/
         $presetPath = public_path('assets/audio');
         $presets = [];
+        $categoryMap = [
+            'Bi Saraha' => 'Arabic Romantic',
+            'Canon in D (Pachelbel)' => 'Classical Piano',
+            'save-and-sound' => 'Soft Acoustic',
+            'Sweet Acoustic Guitar' => 'Garden Acoustic',
+        ];
+
         if (File::exists($presetPath)) {
             $files = File::files($presetPath);
             foreach ($files as $file) {
                 if (in_array(strtolower($file->getExtension()), ['mp3', 'wav', 'ogg', 'm4a'])) {
+                    $filename = $file->getFilename();
+                    $name = pathinfo($filename, PATHINFO_FILENAME);
+                    $category = $categoryMap[$name] ?? 'Musik Undangan';
+
                     $presets[] = [
-                        'name'     => pathinfo($file->getFilename(), PATHINFO_FILENAME),
-                        'filename' => $file->getFilename(),
-                        'path'     => 'assets/audio/' . $file->getFilename(),
+                        'name'     => $name,
+                        'filename' => $filename,
+                        'path'     => 'assets/audio/' . $filename,
+                        'category' => $category,
                     ];
                 }
             }
@@ -108,5 +120,65 @@ class AudioController extends Controller
         ]);
 
         return redirect()->route('audio.index')->with('success', 'Musik latar undangan berhasil diperbarui!');
+    }
+
+    /**
+     * Tambah preset audio baru ke public/assets/audio/ (Khusus Super Admin).
+     */
+    public function storePreset(Request $request)
+    {
+        /** @var \App\Models\User|null $user */
+        $user = auth()->user();
+        if (!$user || !$user->isSuperAdmin()) {
+            abort(403, 'Akses khusus Super Admin.');
+        }
+
+        $request->validate([
+            'preset_name' => 'required|string|max:255',
+            'preset_file' => 'required|file|mimes:mp3,wav,ogg,m4a|max:15360',
+        ]);
+
+        $file = $request->file('preset_file');
+        $extension = $file->getClientOriginalExtension();
+        $cleanTitle = trim(preg_replace('/[^\w\s\-]/', '', $request->preset_name));
+        if (empty($cleanTitle)) {
+            $cleanTitle = 'Preset_' . time();
+        }
+        $filename = $cleanTitle . '.' . $extension;
+
+        $targetDir = public_path('assets/audio');
+        if (!File::exists($targetDir)) {
+            File::makeDirectory($targetDir, 0755, true);
+        }
+
+        $file->move($targetDir, $filename);
+
+        return redirect()->route('audio.index')->with('success', 'Preset musik "' . $cleanTitle . '" berhasil ditambahkan ke playlist sistem!');
+    }
+
+    /**
+     * Hapus preset audio dari public/assets/audio/ (Khusus Super Admin).
+     */
+    public function destroyPreset(Request $request)
+    {
+        /** @var \App\Models\User|null $user */
+        $user = auth()->user();
+        if (!$user || !$user->isSuperAdmin()) {
+            abort(403, 'Akses khusus Super Admin.');
+        }
+
+        $request->validate([
+            'filename' => 'required|string',
+        ]);
+
+        $filename = basename($request->filename);
+        $filePath = public_path('assets/audio/' . $filename);
+
+        if (File::exists($filePath)) {
+            File::delete($filePath);
+            return redirect()->route('audio.index')->with('success', 'Preset musik "' . $filename . '" berhasil dihapus dari playlist sistem!');
+        }
+
+        return redirect()->route('audio.index')->with('success', 'File preset telah dihapus.');
     }
 }

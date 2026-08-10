@@ -74,6 +74,11 @@ class RegisterController extends Controller
         ]);
     }
 
+    protected function registered(\Illuminate\Http\Request $request, $user)
+    {
+        session()->flash('success', 'Pendaftaran akun berhasil! Selamat datang, ' . $user->name . '.');
+    }
+
     protected function redirectTo()
     {
         $user = auth()->user();

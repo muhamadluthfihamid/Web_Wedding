@@ -4,14 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\HasEncryptedRouteKey;
 use Carbon\Carbon;
 
 class Order extends Model
 {
-    use HasFactory;
+    use HasFactory, HasEncryptedRouteKey;
 
     protected $fillable = [
-        'user_id', 'rental_package_id', 'status',
+        'user_id', 'rental_package_id', 'event_type', 'theme_id', 'status',
         'tanggal_mulai', 'tanggal_selesai',
         'bukti_transfer', 'catatan_user', 'catatan_admin',
         'approved_at', 'approved_by',
@@ -33,6 +34,11 @@ class Order extends Model
     public function package()
     {
         return $this->belongsTo(RentalPackage::class, 'rental_package_id');
+    }
+
+    public function theme()
+    {
+        return $this->belongsTo(Theme::class);
     }
 
     public function approvedBy()

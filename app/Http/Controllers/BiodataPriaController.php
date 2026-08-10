@@ -10,7 +10,7 @@ class BiodataPriaController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $biodataPria = $user->isSuperAdmin() ? BiodataPria::all() : BiodataPria::where('user_id', $user->id)->get();
+        $biodataPria = BiodataPria::where('user_id', $user->id)->get();
         return view('admin.pria.index', compact('biodataPria'));
     }
 

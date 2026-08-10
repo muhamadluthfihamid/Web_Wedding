@@ -12,7 +12,7 @@ class BiodataWanitaController extends Controller
     {
         /** @var \App\Models\User|null $user */
         $user = Auth::user();
-        $biodataWanita = ($user && $user->isSuperAdmin()) ? BiodataWanita::all() : BiodataWanita::where('user_id', Auth::id())->get();
+        $biodataWanita = BiodataWanita::where('user_id', Auth::id())->get();
         return view('admin.wanita.index', compact('biodataWanita'));
     }
 

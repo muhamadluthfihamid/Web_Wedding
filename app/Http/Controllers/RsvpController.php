@@ -46,7 +46,7 @@ class RsvpController extends Controller
             ]);
         }
 
-        return redirect()->route('rsvp.index')->with('success', 'Rsvp created successfully.');
+        return redirect()->route('rsvp.index')->with('success', 'Konfirmasi RSVP berhasil ditambahkan.');
     }
 
     // public function show(Rsvp $rsvp)
@@ -80,13 +80,50 @@ class RsvpController extends Controller
 
         $rsvp->update($validated);
 
-        return redirect()->route('rsvp.index')->with('success', 'Rsvp updated successfully.');
+        return redirect()->route('rsvp.index')->with('success', 'Data RSVP berhasil diperbarui.');
     }
 
     public function destroy(Rsvp $rsvp)
     {
         $rsvp->delete();
 
-        return redirect()->route('rsvp.index')->with('success', 'Rspv deleted successfully.');
+        return redirect()->route('rsvp.index')->with('success', 'Data RSVP berhasil dihapus.');
+    }
+
+    /**
+     * Export data RSVP ke format CSV.
+     */
+    public function exportCsv()
+    {
+        $rsvps = Rsvp::latest()->get();
+        $fileName = 'Rekap_RSVP_' . date('Y-m-d_H-i-s') . '.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$fileName\"",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0'
+        ];
+
+        $callback = function () use ($rsvps) {
+            $file = fopen('php://output', 'w');
+            fputs($file, "\xEF\xBB\xBF"); // UTF-8 BOM
+            fputcsv($file, ['No', 'Nama Tamu', 'Jumlah Tamu', 'Status Kehadiran', 'Tanggal Konfirmasi']);
+
+            foreach ($rsvps as $index => $rsvp) {
+                fputcsv($file, [
+                    $index + 1,
+                    $rsvp->nama_tamu,
+                    $rsvp->jumlah,
+                    $rsvp->kehadiran ? 'Hadir' : 'Tidak Hadir',
+                    $rsvp->created_at ? $rsvp->created_at->format('Y-m-d H:i') : '-'
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }

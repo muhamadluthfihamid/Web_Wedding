@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasEncryptedRouteKey;
 
 class BiodataPria extends Model
 {
-    use HasFactory;
+    use HasFactory, HasEncryptedRouteKey;
     protected $fillable = [
         'user_id',
         'nama',

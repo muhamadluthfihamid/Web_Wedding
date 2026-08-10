@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasEncryptedRouteKey;
 
 class TurutMengundang extends Model
 {
-    use HasFactory;
+    use HasFactory, HasEncryptedRouteKey;
 
     protected $table = 'turut_mengundangs';
 

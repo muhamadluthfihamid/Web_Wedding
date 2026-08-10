@@ -24,6 +24,11 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrap();
         Carbon::setLocale('id');
 
+        // Share dynamic store/platform name across all Blade templates & config
+        $storeName = \App\Models\Setting::getStoreName();
+        config(['app.name' => $storeName]);
+        view()->share('store_name', $storeName);
+
         // Share recent RSVPs, Wishes, and Orders with the admin layout
         view()->composer('admin.layouts.admin', function ($view) {
             $recentRsvps = collect();

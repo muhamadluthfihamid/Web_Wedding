@@ -65,11 +65,17 @@ class RentalManageController extends Controller
             $user->slug = $slug;
         }
 
-        // Upgrade role user → admin (kecuali jika superadmin)
+        // Upgrade role user → admin (kecuali jika superadmin) & set event_type & theme_id
         if (!$user->isSuperAdmin()) {
             $user->role = 'admin';
-            $user->save();
         }
+        if ($order->event_type) {
+            $user->event_type = $order->event_type;
+        }
+        if ($order->theme_id) {
+            $user->theme_id = $order->theme_id;
+        }
+        $user->save();
 
         // Aktifkan order
         $order->update([

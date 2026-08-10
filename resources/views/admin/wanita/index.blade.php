@@ -4,14 +4,18 @@
     <!-- Page Heading -->
     <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Biodata Pengantin Wanita</h1>
-            <p class="text-sm text-slate-500 mt-1">Kelola data profil lengkap pengantin wanita</p>
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">
+                {{ Auth::user()->isKhitanan() ? 'Data Orang Tua 👨‍👩‍👦' : 'Biodata Pengantin Wanita 💍' }}
+            </h1>
+            <p class="text-sm text-slate-500 mt-1">
+                {{ Auth::user()->isKhitanan() ? 'Kelola data orang tua (Ayah & Ibu) ananda khitan' : 'Kelola data profil lengkap pengantin wanita' }}
+            </p>
         </div>
         @if ($biodataWanita->isEmpty())
             <div class="flex-shrink-0">
                 <a class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors" 
-                   href="{{ route('biodataWanita.create') }}" title="Tambah Biodata" role="button">
-                    <i class="fas fa-plus"></i> Tambah Biodata
+                   href="{{ route('biodataWanita.create') }}" title="Tambah Data" role="button">
+                    <i class="fas fa-plus"></i> {{ Auth::user()->isKhitanan() ? 'Tambah Data Orang Tua' : 'Tambah Biodata' }}
                 </a>
             </div>
         @endif
@@ -20,23 +24,29 @@
     @if ($biodataWanita->isEmpty())
         <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-12 text-center space-y-4">
             <div class="inline-flex items-center justify-center p-4 bg-indigo-50 text-indigo-600 rounded-full shadow-inner">
-                <i class="fas fa-user-circle text-4xl"></i>
+                <i class="fas {{ Auth::user()->isKhitanan() ? 'fa-users' : 'fa-user-circle' }} text-4xl"></i>
             </div>
             <div class="space-y-1">
-                <h3 class="text-lg font-bold text-slate-950">Belum Ada Biodata Wanita</h3>
-                <p class="text-sm text-slate-500 max-w-sm mx-auto">Tambahkan informasi nama pengantin wanita, orang tua, deskripsi singkat, dan foto.</p>
+                <h3 class="text-lg font-bold text-slate-950">
+                    {{ Auth::user()->isKhitanan() ? 'Belum Ada Data Orang Tua' : 'Belum Ada Biodata Wanita' }}
+                </h3>
+                <p class="text-sm text-slate-500 max-w-sm mx-auto">
+                    {{ Auth::user()->isKhitanan() ? 'Tambahkan informasi nama Ayah, nama Ibu, dan lokasi asal keluarga.' : 'Tambahkan informasi nama pengantin wanita, orang tua, deskripsi singkat, dan foto.' }}
+                </p>
             </div>
             <a class="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors" 
                href="{{ route('biodataWanita.create') }}">
-                <i class="fas fa-plus"></i> Tambah Biodata Wanita
+                <i class="fas fa-plus"></i> {{ Auth::user()->isKhitanan() ? 'Tambah Data Orang Tua' : 'Tambah Biodata Wanita' }}
             </a>
         @else
             @foreach ($biodataWanita as $wanita)
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden mb-8 max-w-3xl">
                     <div class="px-6 py-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                        <h3 class="text-lg font-bold text-slate-900">Profil Pengantin Wanita</h3>
+                        <h3 class="text-lg font-bold text-slate-900">
+                            {{ Auth::user()->isKhitanan() ? 'Data Orang Tua Ananda' : 'Profil Pengantin Wanita' }}
+                        </h3>
                         <div class="flex items-center gap-2">
-                            <a href="{{ route('biodataWanita.edit', $wanita->id) }}" 
+                            <a href="{{ route('biodataWanita.edit', $wanita) }}" 
                                class="inline-flex items-center gap-1.5 px-4 py-2 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg text-sm font-semibold transition-colors">
                                 <i class="fas fa-edit"></i> Edit Profil
                             </a>
@@ -44,7 +54,7 @@
                                     onclick="confirmDelete({{ $wanita->id }})">
                                 <i class="fas fa-trash"></i> Hapus
                             </button>
-                            <form id="delete-form-{{ $wanita->id }}" action="{{ route('biodataWanita.destroy', $wanita->id) }}"
+                            <form id="delete-form-{{ $wanita->id }}" action="{{ route('biodataWanita.destroy', $wanita) }}"
                                 method="POST" class="hidden">
                                 @csrf
                                 @method('DELETE')

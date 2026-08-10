@@ -30,7 +30,7 @@
             <h3 class="text-lg font-bold text-slate-900">Edit Informasi: {{ $user->full_name }}</h3>
         </div>
         <div class="p-6">
-            <form method="POST" action="{{ route('users.update', $user->id) }}" class="space-y-6">
+            <form method="POST" action="{{ route('users.update', $user) }}" class="space-y-6">
                 @csrf
                 @method('PUT')
 

@@ -4,17 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasEncryptedRouteKey;
 
 class Gifts extends Model
 {
-    use HasFactory;
+    use HasFactory, HasEncryptedRouteKey;
 
     protected $fillable = [
         'user_id',
         'nama',
         'deskripsi',
         'nama_bank',
-        'gambar',
         'no_rek',
+        'bg_color',
     ];
 }

@@ -2,9 +2,17 @@
 
 @section('main-content')
     <!-- Page Heading -->
-    <div class="mb-6">
-        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">{{ __('Ucapan Tamu') }}</h1>
-        <p class="text-sm text-slate-500 mt-1">Daftar ucapan selamat dan doa restu dari para tamu undangan</p>
+    <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">{{ __('Ucapan Tamu') }}</h1>
+            <p class="text-sm text-slate-500 mt-1">Daftar ucapan selamat dan doa restu dari para tamu undangan</p>
+        </div>
+        <div class="flex-shrink-0">
+            <a href="{{ route('wish.exportCsv') }}" 
+               class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm text-sm font-semibold text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                <i class="fas fa-file-csv text-emerald-600"></i> Export CSV
+            </a>
+        </div>
     </div>
     
     <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
@@ -40,7 +48,7 @@
                                 <td class="px-6 py-4 text-sm text-slate-600 whitespace-normal break-words max-w-xs">{{ $wish->ucapan }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-400">{{ $wish->created_at->diffForHumans() }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
-                                    <form action="{{ route('wish.destroy', $wish->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus ucapan ini?');" class="inline-block">
+                                    <form action="{{ route('wish.destroy', $wish) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus ucapan ini?');" class="inline-block">
                                          @csrf
                                          @method('DELETE')
                                          <button type="submit" class="inline-flex items-center gap-1 px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg text-xs font-semibold transition-colors">

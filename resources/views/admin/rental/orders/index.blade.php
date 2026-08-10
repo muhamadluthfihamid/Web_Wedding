@@ -39,6 +39,7 @@
             <thead class="bg-slate-50">
                 <tr>
                     <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase">Penyewa</th>
+                    <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase">Jenis Acara & Tema</th>
                     <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase">Paket</th>
                     <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase">Status</th>
                     <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase">Tanggal Pesan</th>
@@ -53,7 +54,13 @@
                         <p class="font-semibold text-slate-900 text-sm">{{ $order->user->full_name }}</p>
                         <p class="text-xs text-slate-400">{{ $order->user->email }}</p>
                     </td>
-                    <td class="px-5 py-4 text-sm text-slate-700">{{ $order->package->nama }}</td>
+                    <td class="px-5 py-4">
+                        <span class="inline-block px-2 py-0.5 text-[10px] font-extrabold uppercase rounded-full {{ $order->event_type == 'khitanan' ? 'bg-emerald-100 text-emerald-700' : 'bg-pink-100 text-pink-700' }}">
+                            {{ $order->event_type == 'khitanan' ? '👦 Khitanan' : '💍 Pernikahan' }}
+                        </span>
+                        <p class="text-xs font-medium text-slate-600 mt-1">{{ $order->theme ? $order->theme->name : '-' }}</p>
+                    </td>
+                    <td class="px-5 py-4 text-sm text-slate-700 font-bold">{{ $order->package->nama }}</td>
                     <td class="px-5 py-4">
                         @php $c = $order->status_color; @endphp
                         <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-{{ $c }}-100 text-{{ $c }}-700">

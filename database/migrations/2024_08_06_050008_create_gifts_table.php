@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('nama');
             $table->text('deskripsi');
             $table->string('nama_bank');
-            $table->string('gambar')->nullable();
             $table->bigInteger('no_rek');
             $table->timestamps();
         });

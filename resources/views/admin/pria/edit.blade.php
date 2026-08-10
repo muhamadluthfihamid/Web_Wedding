@@ -3,8 +3,8 @@
 @section('main-content')
     <!-- Page Heading -->
     <div class="mb-6">
-        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Edit Biodata Pria</h1>
-        <p class="text-sm text-slate-500 mt-1">Perbarui informasi biodata pengantin pria</p>
+        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">{{ Auth::user()->isKhitanan() ? 'Edit Data Anak Khitan' : 'Edit Biodata Pria' }}</h1>
+        <p class="text-sm text-slate-500 mt-1">{{ Auth::user()->isKhitanan() ? 'Perbarui informasi ananda yang dikhitan' : 'Perbarui informasi biodata pengantin pria' }}</p>
     </div>
 
     @if ($errors->any())
@@ -30,14 +30,14 @@
             <h3 class="text-lg font-bold text-slate-900">Edit Profil: {{ $biodataPria->nama }}</h3>
         </div>
         <div class="p-6">
-            <form action="{{ route('biodataPria.update', $biodataPria->id) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+            <form action="{{ route('biodataPria.update', $biodataPria) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 @method('PUT')
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div class="space-y-6">
                         <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-1" for="nama">Nama Lengkap Pengantin Pria<span class="text-rose-500">*</span></label>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1" for="nama">{{ Auth::user()->isKhitanan() ? 'Nama Lengkap Ananda' : 'Nama Lengkap Pengantin Pria' }}<span class="text-rose-500">*</span></label>
                             <input type="text" id="nama" name="nama" value="{{ old('nama', $biodataPria->nama) }}" required
                                    class="block w-full px-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all">
                         </div>
@@ -77,7 +77,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-1" for="deskripsi">Deskripsi Singkat / Kutipan Kata Pengantin Pria:<span class="text-rose-500">*</span></label>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1" for="deskripsi">{{ Auth::user()->isKhitanan() ? 'Deskripsi Singkat / Catatan Ananda:' : 'Deskripsi Singkat / Kutipan Kata Pengantin Pria:' }}<span class="text-rose-500">*</span></label>
                     <textarea id="deskripsi" name="deskripsi" rows="4" required
                               class="block w-full px-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all">{{ old('deskripsi', $biodataPria->deskripsi) }}</textarea>
                 </div>

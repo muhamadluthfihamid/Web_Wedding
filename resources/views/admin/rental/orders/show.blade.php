@@ -25,6 +25,18 @@
             <dl class="grid grid-cols-2 gap-4 text-sm">
                 <div><dt class="text-slate-400 font-medium">Penyewa</dt><dd class="font-semibold text-slate-900 mt-0.5">{{ $order->user->full_name }}</dd></div>
                 <div><dt class="text-slate-400 font-medium">Email</dt><dd class="font-semibold text-slate-900 mt-0.5">{{ $order->user->email }}</dd></div>
+                <div>
+                    <dt class="text-slate-400 font-medium">Jenis Acara</dt>
+                    <dd class="font-bold text-slate-900 mt-0.5 flex items-center gap-1.5">
+                        <span class="inline-block px-2.5 py-0.5 text-xs font-bold uppercase rounded-full {{ $order->event_type == 'khitanan' ? 'bg-emerald-100 text-emerald-700' : 'bg-pink-100 text-pink-700' }}">
+                            {{ $order->event_type == 'khitanan' ? '👦 Undangan Khitanan' : '💍 Undangan Pernikahan' }}
+                        </span>
+                    </dd>
+                </div>
+                <div>
+                    <dt class="text-slate-400 font-medium">Tema Pilihan</dt>
+                    <dd class="font-semibold text-slate-900 mt-0.5">{{ $order->theme ? $order->theme->name : '-' }}</dd>
+                </div>
                 <div><dt class="text-slate-400 font-medium">Paket</dt><dd class="font-semibold text-slate-900 mt-0.5">{{ $order->package->nama }} ({{ $order->package->harga_format }})</dd></div>
                 <div><dt class="text-slate-400 font-medium">Durasi</dt><dd class="font-semibold text-slate-900 mt-0.5">{{ $order->package->durasi_teks }}</dd></div>
                 <div><dt class="text-slate-400 font-medium">Dipesan Pada</dt><dd class="font-semibold text-slate-900 mt-0.5">{{ $order->created_at->format('d M Y, H:i') }}</dd></div>

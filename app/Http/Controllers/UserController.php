@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
@@ -61,19 +62,16 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(User $user)
     {
-        $user = User::findOrFail($id);
         return view('admin.users.edit', compact('user'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, User $user)
     {
-        $user = User::findOrFail($id);
-
         $rules = [
             'name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
@@ -101,12 +99,10 @@ class UserController extends Controller
         return redirect()->route('users.index')->with('success', 'User berhasil diperbarui.');
     }
 
-    public function destroy(Request $request, string $id)
+    public function destroy(Request $request, User $user)
     {
-        $user = User::findOrFail($id);
-
         // Prevent self deletion
-        if (auth()->id() === $user->id) {
+        if (Auth::id() === $user->id) {
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
@@ -127,10 +123,9 @@ class UserController extends Controller
 
         return redirect()->route('users.index')->with('success', 'User berhasil dihapus.');
     }
-    public function resetPassword(Request $request, string $id)
-    {
-        $user = User::findOrFail($id);
 
+    public function resetPassword(Request $request, User $user)
+    {
         $request->validate([
             'new_password'              => ['required', 'string', 'min:8', 'confirmed'],
             'new_password_confirmation' => ['required'],

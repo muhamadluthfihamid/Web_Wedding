@@ -16,7 +16,8 @@ class RentalController extends Controller
     public function index()
     {
         $packages = RentalPackage::aktif()->orderBy('harga')->get();
-        return view('rental.landing', compact('packages'));
+        $themes   = \App\Models\Theme::active()->get();
+        return view('rental.landing', compact('packages', 'themes'));
     }
 
     /**
@@ -45,7 +46,9 @@ class RentalController extends Controller
             return redirect()->route('rental.status')->with('info', 'Anda sudah memiliki pesanan yang sedang menunggu konfirmasi.');
         }
 
-        return view('rental.order', compact('package'));
+        $themes = \App\Models\Theme::active()->get();
+
+        return view('rental.order', compact('package', 'themes'));
     }
 
     /**
@@ -55,6 +58,8 @@ class RentalController extends Controller
     {
         $request->validate([
             'rental_package_id' => 'required|exists:rental_packages,id',
+            'event_type'        => 'required|in:wedding,khitanan',
+            'theme_id'          => 'required|exists:themes,id',
             'bukti_transfer'    => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'catatan_user'      => 'nullable|string|max:500',
         ]);
@@ -77,6 +82,8 @@ class RentalController extends Controller
         Order::create([
             'user_id'           => $user->id,
             'rental_package_id' => $package->id,
+            'event_type'        => $request->event_type,
+            'theme_id'          => $request->theme_id,
             'status'            => 'pending',
             'bukti_transfer'    => $path,
             'catatan_user'      => $request->catatan_user,

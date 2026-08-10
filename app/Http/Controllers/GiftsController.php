@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Gifts;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class GiftsController extends Controller
 {
@@ -26,23 +25,18 @@ class GiftsController extends Controller
     {
        $validated = $request->validate([
             'nama' => 'required|max:255',
-            'deskripsi' => 'required',
+            'deskripsi' => 'nullable|string',
             'nama_bank' => 'required|max:255',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'no_rek' => 'required|numeric',
+            'no_rek' => 'required|string|max:255',
+            'bg_color' => 'nullable|string|max:50',
         ]);
 
         $data = $validated;
         $data['user_id'] = Auth::id();
 
-        if ($request->hasFile('gambar')) {
-            $path = $request->file('gambar')->store('gambar', 'public');
-            $data['gambar'] = $path;
-        }
-
         Gifts::create($data);
 
-        return redirect()->route('gifts.index')->with('success', 'Gift created successfully.');
+        return redirect()->route('gifts.index')->with('success', 'Data hadiah/rekening berhasil ditambahkan.');
     }
 
     // public function show(Gifts $gift)
@@ -59,39 +53,24 @@ class GiftsController extends Controller
 {
     $validatedData = $request->validate([
         'nama' => 'required|max:255',
-        'deskripsi' => 'required',
+        'deskripsi' => 'nullable|string',
         'nama_bank' => 'required|max:255',
-        'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        'no_rek' => 'required|numeric',
+        'no_rek' => 'required|string|max:255',
+        'bg_color' => 'nullable|string|max:50',
     ]);
-
-    if ($request->hasFile('gambar')) {
-        // hapus gambar lama
-        if ($gift->gambar) {
-            Storage::disk('public')->delete($gift->gambar);
-        }
-
-        $validatedData['gambar'] = $request->file('gambar')
-            ->store('gambar', 'public');
-    }
 
     $gift->update($validatedData);
 
     return redirect()
         ->route('gifts.index')
-        ->with('success', 'Gift updated successfully.');
+        ->with('success', 'Data hadiah/rekening berhasil diperbarui.');
 }
 
 
     public function destroy(Gifts $gift)
     {
-         // Hapus gambar dari storage jika ada
-         if ($gift->gambar) {
-            Storage::disk('public')->delete($gift->gambar);
-        }
-
         $gift->delete();
 
-        return redirect()->route('gifts.index')->with('success', 'Gift deleted successfully.');
+        return redirect()->route('gifts.index')->with('success', 'Data hadiah/rekening berhasil dihapus.');
     }
 }

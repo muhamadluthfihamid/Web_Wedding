@@ -59,10 +59,40 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-1" for="gambar">Barcode / Logo (Gambar)</label>
-                            <input type="file" id="gambar" name="gambar"
-                                   class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-750 file:text-indigo-700 hover:file:bg-indigo-100 transition-all">
+                            <label class="block text-sm font-semibold text-slate-700 mb-1" for="bg_color">Warna Background Kartu<span class="text-rose-500">*</span></label>
+                            <div class="flex items-center gap-3">
+                                <input type="color" id="bg_color_picker" value="{{ old('bg_color', '#3e4b6d') }}"
+                                       class="h-10 w-14 cursor-pointer rounded-lg border border-slate-200 p-1"
+                                       oninput="document.getElementById('bg_color').value = this.value; updateCardPreview(this.value);">
+                                <input type="text" id="bg_color" name="bg_color" value="{{ old('bg_color', '#3e4b6d') }}" required
+                                       class="block w-full px-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all"
+                                       placeholder="#3e4b6d" oninput="document.getElementById('bg_color_picker').value = this.value; updateCardPreview(this.value);">
+                            </div>
+                            <!-- Color Presets -->
+                            <div class="mt-2.5 flex flex-wrap gap-2 items-center text-xs">
+                                <span class="text-slate-400 font-medium me-1">Pilihan Warna:</span>
+                                <button type="button" onclick="setColor('#3e4b6d')" class="w-6 h-6 rounded-full border border-slate-200 shadow-sm" style="background:#3e4b6d" title="Navy Blue"></button>
+                                <button type="button" onclick="setColor('#1e293b')" class="w-6 h-6 rounded-full border border-slate-200 shadow-sm" style="background:#1e293b" title="Midnight Slate"></button>
+                                <button type="button" onclick="setColor('#065f46')" class="w-6 h-6 rounded-full border border-slate-200 shadow-sm" style="background:#065f46" title="Emerald Green"></button>
+                                <button type="button" onclick="setColor('#800020')" class="w-6 h-6 rounded-full border border-slate-200 shadow-sm" style="background:#800020" title="Burgundy"></button>
+                                <button type="button" onclick="setColor('#b39247')" class="w-6 h-6 rounded-full border border-slate-200 shadow-sm" style="background:#b39247" title="Elegant Gold"></button>
+                                <button type="button" onclick="setColor('#4c1d95')" class="w-6 h-6 rounded-full border border-slate-200 shadow-sm" style="background:#4c1d95" title="Royal Purple"></button>
+                            </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Live Card Preview -->
+                <div class="p-4 rounded-xl border border-slate-100 bg-slate-50">
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-2">Pratinjau Tampilan Kartu</label>
+                    <div id="card-preview" class="p-5 rounded-2xl text-white shadow-md transition-all duration-300" style="background: {{ old('bg_color', '#3e4b6d') }};">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider opacity-80" id="preview-bank">Nama Bank / E-Wallet</span>
+                            <div class="w-8 h-6 bg-yellow-400/80 rounded-md"></div>
+                        </div>
+                        <div class="font-mono text-lg font-bold tracking-widest my-2" id="preview-rek">1234 5678 9000</div>
+                        <div class="text-[10px] uppercase opacity-70">Atas Nama</div>
+                        <div class="text-sm font-semibold" id="preview-nama">Nama Penerima</div>
                     </div>
                 </div>
 
@@ -86,4 +116,38 @@
             </form>
         </div>
     </div>
+
+    <script>
+        function setColor(hex) {
+            document.getElementById('bg_color_picker').value = hex;
+            document.getElementById('bg_color').value = hex;
+            updateCardPreview(hex);
+        }
+
+        function updateCardPreview(color) {
+            document.getElementById('card-preview').style.background = color;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputNama = document.getElementById('nama');
+            const inputBank = document.getElementById('nama_bank');
+            const inputRek  = document.getElementById('no_rek');
+
+            if (inputNama) {
+                inputNama.addEventListener('input', function() {
+                    document.getElementById('preview-nama').innerText = this.value || 'Nama Penerima';
+                });
+            }
+            if (inputBank) {
+                inputBank.addEventListener('input', function() {
+                    document.getElementById('preview-bank').innerText = this.value || 'Nama Bank / E-Wallet';
+                });
+            }
+            if (inputRek) {
+                inputRek.addEventListener('input', function() {
+                    document.getElementById('preview-rek').innerText = this.value || '1234 5678 9000';
+                });
+            }
+        });
+    </script>
 @endsection
