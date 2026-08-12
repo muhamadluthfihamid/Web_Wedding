@@ -47,8 +47,6 @@ Route::middleware('auth')->group(function () {
 | AUTH ROUTES
 |--------------------------------------------------------------------------
 */
-Route::get('/login', fn () => view('auth.login'))->name('login');
-
 Auth::routes([
     'register' => true,
 ]);
@@ -70,7 +68,7 @@ Route::get('/rental-info', function () {
 Route::prefix('admin')->group(function () {
 
     Route::get('/', function () {
-        return view('auth.login');
+        return redirect()->route('login');
     })->name('login.admin');
 
     Route::middleware(['auth', 'role:superadmin,admin'])->group(function () {
