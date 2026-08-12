@@ -3,8 +3,8 @@
 @section('main-content')
     <!-- Page Heading -->
     <div class="mb-6">
-        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Edit Info Pernikahan</h1>
-        <p class="text-sm text-slate-500 mt-1">Perbarui data detail dasar acara pernikahan Anda</p>
+        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">{{ Auth::user()->isKhitanan() ? 'Edit Info Acara Khitan' : 'Edit Info Pernikahan' }}</h1>
+        <p class="text-sm text-slate-500 mt-1">{{ Auth::user()->isKhitanan() ? 'Perbarui data detail dasar acara khitanan Anda' : 'Perbarui data detail dasar acara pernikahan Anda' }}</p>
     </div>
 
     @if ($errors->any())
@@ -30,7 +30,7 @@
             <h3 class="text-lg font-bold text-slate-900">Form Informasi Acara</h3>
         </div>
         <div class="p-6">
-            <form action="{{ route('info.update', $info->id) }}" method="POST" class="space-y-6">
+            <form action="{{ route('info.update', $info) }}" method="POST" class="space-y-6">
                 @csrf
                 @method('PUT')
 
@@ -38,19 +38,19 @@
                     <!-- Kolom Kiri -->
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-1">Nama Pengantin Pria<span class="text-rose-500">*</span></label>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">{{ Auth::user()->isKhitanan() ? 'Nama Ananda (Anak Khitan)' : 'Nama Pengantin Pria' }}<span class="text-rose-500">*</span></label>
                             <input type="text" name="nama_pengantin_pria" value="{{ old('nama_pengantin_pria', $info->nama_pengantin_pria) }}" required
                                    class="block w-full px-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all">
                         </div>
 
                         <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-1">Nama Pengantin Wanita<span class="text-rose-500">*</span></label>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">{{ Auth::user()->isKhitanan() ? 'Nama Orang Tua / Wali' : 'Nama Pengantin Wanita' }}<span class="text-rose-500">*</span></label>
                             <input type="text" name="nama_pengantin_istri" value="{{ old('nama_pengantin_istri', $info->nama_pengantin_istri) }}" required
                                    class="block w-full px-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all">
                         </div>
 
                         <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-1">Tanggal Pernikahan<span class="text-rose-500">*</span></label>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">{{ Auth::user()->isKhitanan() ? 'Tanggal Acara Khitanan' : 'Tanggal Pernikahan' }}<span class="text-rose-500">*</span></label>
                             <input type="date" name="tanggal_pernikahan" value="{{ old('tanggal_pernikahan', $info->tanggal_pernikahan ? \Carbon\Carbon::parse($info->tanggal_pernikahan)->format('Y-m-d') : '') }}" required
                                    class="block w-full px-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all">
                         </div>
@@ -104,19 +104,19 @@
                     <div class="space-y-4">
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-1">Mulai Akad<span class="text-rose-500">*</span></label>
+                                <label class="block text-sm font-semibold text-slate-700 mb-1">{{ Auth::user()->isKhitanan() ? 'Mulai Acara Inti' : 'Mulai Akad' }}<span class="text-rose-500">*</span></label>
                                 <input type="time" name="mulai_akad" value="{{ old('mulai_akad', \Illuminate\Support\Str::substr($info->mulai_akad, 0, 5)) }}" required
                                        class="block w-full px-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all">
                             </div>
                             <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-1">Selesai Akad<span class="text-rose-500">*</span></label>
+                                <label class="block text-sm font-semibold text-slate-700 mb-1">{{ Auth::user()->isKhitanan() ? 'Selesai Acara Inti' : 'Selesai Akad' }}<span class="text-rose-500">*</span></label>
                                 <input type="time" name="selesai_akad" value="{{ old('selesai_akad', \Illuminate\Support\Str::substr($info->selesai_akad, 0, 5)) }}" required
                                        class="block w-full px-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all">
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-1">Mulai Resepsi<span class="text-rose-500">*</span></label>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">{{ Auth::user()->isKhitanan() ? 'Mulai Syukuran / Resepsi' : 'Mulai Resepsi' }}<span class="text-rose-500">*</span></label>
                             <input type="time" name="mulai_resepsi" value="{{ old('mulai_resepsi', \Illuminate\Support\Str::substr($info->mulai_resepsi, 0, 5)) }}" required
                                    class="block w-full px-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all">
                         </div>

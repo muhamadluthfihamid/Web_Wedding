@@ -14,9 +14,7 @@ class TurutMengundangController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $turutMengundangs = $user->isSuperAdmin()
-            ? TurutMengundang::with('user')->orderBy('urutan', 'asc')->orderBy('created_at', 'asc')->get()
-            : TurutMengundang::where('user_id', $user->id)->orderBy('urutan', 'asc')->orderBy('created_at', 'asc')->get();
+        $turutMengundangs = TurutMengundang::where('user_id', $user->id)->orderBy('urutan', 'asc')->orderBy('created_at', 'asc')->get();
 
         return view('admin.turut_mengundang.index', compact('turutMengundangs'));
     }

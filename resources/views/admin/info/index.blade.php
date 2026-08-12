@@ -4,14 +4,18 @@
     <!-- Page Heading -->
     <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Info Pernikahan</h1>
-            <p class="text-sm text-slate-500 mt-1">Kelola data dasar pernikahan, waktu acara, dan peta lokasi</p>
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">
+                {{ Auth::user()->isKhitanan() ? 'Info Acara Khitan 👦' : 'Info Pernikahan 💍' }}
+            </h1>
+            <p class="text-sm text-slate-500 mt-1">
+                {{ Auth::user()->isKhitanan() ? 'Kelola tanggal, waktu syukuran khitan, dan peta lokasi acara' : 'Kelola data dasar pernikahan, waktu acara, dan peta lokasi' }}
+            </p>
         </div>
         @if($infos->isEmpty())
             <div class="flex-shrink-0">
                 <a class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors" 
                    href="{{ route('info.create') }}" title="Tambah Info" role="button">
-                    <i class="fas fa-plus"></i> Tambah Info
+                    <i class="fas fa-plus"></i> {{ Auth::user()->isKhitanan() ? 'Tambah Info Acara' : 'Tambah Info' }}
                 </a>
             </div>
         @endif
@@ -24,7 +28,9 @@
             </div>
             <div class="space-y-1">
                 <h3 class="text-lg font-bold text-slate-950">Belum Ada Informasi Acara</h3>
-                <p class="text-sm text-slate-500 max-w-sm mx-auto">Tambahkan tanggal pernikahan, waktu akad/resepsi, dan peta lokasi agar tamu undangan mengetahuinya.</p>
+                <p class="text-sm text-slate-500 max-w-sm mx-auto">
+                    {{ Auth::user()->isKhitanan() ? 'Tambahkan tanggal khitanan, waktu syukuran/resepsi, dan lokasi acara.' : 'Tambahkan tanggal pernikahan, waktu akad/resepsi, dan peta lokasi agar tamu undangan mengetahuinya.' }}
+                </p>
             </div>
             <a class="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors" 
                href="{{ route('info.create') }}">
@@ -35,9 +41,11 @@
         @foreach ($infos as $info)
             <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden mb-8">
                 <div class="px-6 py-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <h3 class="text-lg font-bold text-slate-900">Detail Informasi Pernikahan</h3>
+                    <h3 class="text-lg font-bold text-slate-900">
+                        {{ Auth::user()->isKhitanan() ? 'Detail Informasi Acara Khitan' : 'Detail Informasi Pernikahan' }}
+                    </h3>
                     <div class="flex items-center gap-2">
-                        <a href="{{ route('info.edit', $info->id) }}" 
+                        <a href="{{ route('info.edit', $info) }}" 
                            class="inline-flex items-center gap-1.5 px-4 py-2 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg text-sm font-semibold transition-colors">
                             <i class="fas fa-edit"></i> Edit Info
                         </a>
@@ -45,7 +53,7 @@
                                 onclick="confirmDelete({{ $info->id }})">
                             <i class="fas fa-trash"></i> Hapus
                         </button>
-                        <form id="delete-form-{{ $info->id }}" action="{{ route('info.destroy', $info->id) }}"
+                        <form id="delete-form-{{ $info->id }}" action="{{ route('info.destroy', $info) }}"
                             method="POST" class="hidden">
                             @csrf
                             @method('DELETE')
@@ -57,14 +65,14 @@
                     <!-- Kolom Kiri: Nama & Tanggal -->
                     <div class="space-y-6">
                         <div class="bg-slate-50/50 p-5 rounded-2xl border border-slate-100 space-y-4">
-                            <h4 class="text-sm font-bold text-slate-500 uppercase tracking-wider">Pengantin</h4>
+                            <h4 class="text-sm font-bold text-slate-500 uppercase tracking-wider">{{ Auth::user()->isKhitanan() ? 'Profil Utama' : 'Pengantin' }}</h4>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <span class="text-xs text-slate-400 block font-semibold">Pengantin Pria:</span>
+                                    <span class="text-xs text-slate-400 block font-semibold">{{ Auth::user()->isKhitanan() ? 'Nama Ananda:' : 'Pengantin Pria:' }}</span>
                                     <span class="text-base font-bold text-slate-900 block mt-0.5">{{ $info->nama_pengantin_pria }}</span>
                                 </div>
                                 <div>
-                                    <span class="text-xs text-slate-400 block font-semibold">Pengantin Wanita:</span>
+                                    <span class="text-xs text-slate-400 block font-semibold">{{ Auth::user()->isKhitanan() ? 'Orang Tua / Wali:' : 'Pengantin Wanita:' }}</span>
                                     <span class="text-base font-bold text-slate-900 block mt-0.5">{{ $info->nama_pengantin_istri }}</span>
                                 </div>
                             </div>

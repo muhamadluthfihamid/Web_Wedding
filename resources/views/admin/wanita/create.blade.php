@@ -3,8 +3,8 @@
 @section('main-content')
     <!-- Page Heading -->
     <div class="mb-6">
-        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Tambah Biodata Wanita</h1>
-        <p class="text-sm text-slate-500 mt-1">Lengkapi informasi biodata pengantin wanita</p>
+        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">{{ Auth::user()->isKhitanan() ? 'Tambah Data Orang Tua' : 'Tambah Biodata Wanita' }}</h1>
+        <p class="text-sm text-slate-500 mt-1">{{ Auth::user()->isKhitanan() ? 'Lengkapi informasi data orang tua ananda' : 'Lengkapi informasi biodata pengantin wanita' }}</p>
     </div>
 
     @if ($errors->any())
@@ -27,7 +27,7 @@
 
     <div class="max-w-3xl bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <div class="px-6 py-5 border-b border-slate-100">
-            <h3 class="text-lg font-bold text-slate-900">Form Biodata Pengantin Wanita</h3>
+            <h3 class="text-lg font-bold text-slate-900">{{ Auth::user()->isKhitanan() ? 'Form Data Orang Tua Ananda' : 'Form Biodata Pengantin Wanita' }}</h3>
         </div>
         <div class="p-6">
             <form action="{{ route('biodataWanita.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
@@ -36,9 +36,9 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div class="space-y-6">
                         <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-1" for="nama">Nama Lengkap Pengantin Wanita<span class="text-rose-500">*</span></label>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1" for="nama">{{ Auth::user()->isKhitanan() ? 'Nama Orang Tua / Ibu' : 'Nama Lengkap Pengantin Wanita' }}<span class="text-rose-500">*</span></label>
                             <input type="text" id="nama" name="nama" value="{{ old('nama') }}" required
-                                   placeholder="Contoh: Hamidah Salsabila"
+                                   placeholder="{{ Auth::user()->isKhitanan() ? 'Contoh: Ibu Ani / Keluarga Orang Tua' : 'Contoh: Hamidah Salsabila' }}"
                                    class="block w-full px-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all">
                         </div>
 
@@ -74,8 +74,8 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-1" for="deskripsi">Deskripsi Singkat / Kutipan Kata Pengantin Wanita:<span class="text-rose-500">*</span></label>
-                    <textarea id="deskripsi" name="deskripsi" rows="4" required placeholder="Tuliskan cerita singkat atau kutipan mutiara dari pengantin wanita..."
+                    <label class="block text-sm font-semibold text-slate-700 mb-1" for="deskripsi">{{ Auth::user()->isKhitanan() ? 'Deskripsi Singkat / Catatan Keluarga:' : 'Deskripsi Singkat / Kutipan Kata Pengantin Wanita:' }}<span class="text-rose-500">*</span></label>
+                    <textarea id="deskripsi" name="deskripsi" rows="4" required placeholder="{{ Auth::user()->isKhitanan() ? 'Tuliskan deskripsi singkat atau ucapan syukur keluarga...' : 'Tuliskan cerita singkat atau kutipan mutiara dari pengantin wanita...' }}"
                               class="block w-full px-3 py-2.5 border border-slate-200 rounded-lg text-slate-950 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all">{{ old('deskripsi') }}</textarea>
                 </div>
 

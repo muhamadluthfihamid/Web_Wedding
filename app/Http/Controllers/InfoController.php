@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Gallery;
 use App\Models\Info;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class InfoController extends Controller
 {
     public function index()
     {
-        $user = auth()->user();
-        $infos = $user->isSuperAdmin() ? Info::all() : Info::where('user_id', $user->id)->get();
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $infos = Info::query()->where('user_id', $user->id)->get();
         return view('admin.info.index', compact('infos'));
     }
 
@@ -40,11 +43,11 @@ class InfoController extends Controller
             'salam_penutup' => 'nullable|string|max:255',
         ]);
 
-        $validated['user_id'] = auth()->id();
+        $validated['user_id'] = Auth::id();
         
         Info::create($validated);
 
-        return redirect()->route('info.index')->with('success', 'Info created successfully.');
+        return redirect()->route('info.index')->with('success', 'Data info pernikahan berhasil ditambahkan.');
     }
 
 
@@ -78,19 +81,20 @@ class InfoController extends Controller
 
         return redirect()
             ->route('info.index')
-            ->with('success', 'Info berhasil diperbarui.');
+            ->with('success', 'Data info pernikahan berhasil diperbarui.');
     }
 
 
     public function destroy(Info $info)
     {
         // Hapus data galeri yang bergantung terlebih dahulu
-        \App\Models\Gallery::where('id_nama_pengantin_pria', $info->id)
+        Gallery::query()
+            ->where('id_nama_pengantin_pria', $info->id)
             ->orWhere('id_nama_pengantin_istri', $info->id)
             ->delete();
 
         $info->delete();
 
-        return redirect()->route('info.index')->with('success', 'Info deleted successfully.');
+        return redirect()->route('info.index')->with('success', 'Data info pernikahan berhasil dihapus.');
     }
 }

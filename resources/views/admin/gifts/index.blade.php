@@ -23,7 +23,7 @@
                         <th scope="col" class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider w-[5%]">No.</th>
                         <th scope="col" class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Nama Penerima</th>
                         <th scope="col" class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Nama Bank / E-Wallet</th>
-                        <th scope="col" class="px-6 py-3.5 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">Gambar QR / Logo</th>
+                        <th scope="col" class="px-6 py-3.5 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">Warna Kartu</th>
                         <th scope="col" class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">No. Rekening</th>
                         <th scope="col" class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Deskripsi</th>
                         <th scope="col" class="px-6 py-3.5 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider w-[15%]">Aksi</th>
@@ -43,17 +43,17 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-900">{{ $gift->nama }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600 font-semibold">{{ $gift->nama_bank }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
-                                    @if ($gift->gambar)
-                                        <img src="{{ asset('storage/' . $gift->gambar) }}" class="h-12 w-auto object-contain mx-auto rounded border border-slate-100 shadow-sm" style="max-height: 48px;">
-                                    @else
-                                        <span class="text-xs text-slate-400">Tidak ada gambar</span>
-                                    @endif
+                                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold border shadow-sm"
+                                         style="background-color: {{ $gift->bg_color ?? '#3e4b6d' }}; color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-white/80"></span>
+                                        {{ strtoupper($gift->bg_color ?? '#3e4b6d') }}
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-800 font-mono font-bold">{{ $gift->no_rek }}</td>
                                 <td class="px-6 py-4 text-sm text-slate-500 whitespace-normal break-words max-w-[200px]">{{ Str::limit($gift->deskripsi, 50) }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
                                     <div class="flex items-center justify-center gap-2">
-                                        <a href="{{ route('gifts.edit', $gift->id) }}" 
+                                        <a href="{{ route('gifts.edit', $gift) }}" 
                                            class="inline-flex items-center gap-1 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg text-xs font-semibold transition-colors">
                                             <i class="fas fa-edit"></i> Edit
                                         </a>
@@ -62,7 +62,7 @@
                                             <i class="fas fa-trash"></i> Hapus
                                         </button>
                                     </div>
-                                    <form id="delete-form-{{ $gift->id }}" action="{{ route('gifts.destroy', $gift->id) }}"
+                                    <form id="delete-form-{{ $gift->id }}" action="{{ route('gifts.destroy', $gift) }}"
                                         method="POST" class="hidden">
                                         @csrf
                                         @method('DELETE')

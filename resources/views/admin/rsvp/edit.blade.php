@@ -30,7 +30,7 @@
             <h3 class="text-lg font-bold text-slate-900">Edit Konfirmasi: {{ $rsvp->nama_tamu }}</h3>
         </div>
         <div class="p-6">
-            <form action="{{ route('rsvp.update', $rsvp->id) }}" method="POST" class="space-y-6">
+            <form action="{{ route('rsvp.update', $rsvp) }}" method="POST" class="space-y-6">
                 @csrf
                 @method('PUT')
 

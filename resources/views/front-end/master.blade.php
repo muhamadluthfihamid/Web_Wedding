@@ -5,7 +5,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Undangan Pernikahan | Lu'iz-Wedding</title>
+    @include('components.og-meta')
+    @php
+        $namaIstri = null;
+        $namaPria = null;
+        if (isset($infos) && $infos->isNotEmpty()) {
+            $firstInfo = $infos->first();
+            $namaIstri = $firstInfo->nama_pengantin_istri;
+            $namaPria = $firstInfo->nama_pengantin_pria;
+        }
+        if (!$namaIstri && isset($biodataWanita) && $biodataWanita->isNotEmpty()) {
+            $namaIstri = $biodataWanita->first()->nama;
+        }
+        if (!$namaPria && isset($biodataPria) && $biodataPria->isNotEmpty()) {
+            $namaPria = $biodataPria->first()->nama;
+        }
+        $namaIstri = $namaIstri ?: 'Mempelai Wanita';
+        $namaPria = $namaPria ?: 'Mempelai Pria';
+        $coupleTitle = $namaIstri . ' & ' . $namaPria;
+    @endphp
+
+    <title>Undangan Pernikahan {{ $coupleTitle }} | {{ $store_name }}</title>
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -30,11 +50,29 @@
     <!-- SweetAlert2 for Toast Notifications -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- Custom Main Styles -->
-    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <!-- Custom Main Styles (with cache busting for InfinityFree/cPanel) -->
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}?v={{ time() }}">
 </head>
 
 <body>
+    @include('components.preloader')
+
+    <!-- Modern Animated Ambient Background & Sparkles -->
+    <div class="modern-animated-bg">
+        <div class="ambient-orb ambient-orb-1"></div>
+        <div class="ambient-orb ambient-orb-2"></div>
+        <div class="ambient-orb ambient-orb-3"></div>
+        <div class="ambient-orb ambient-orb-4"></div>
+    </div>
+
+    <!-- Floating Sparkle Particles -->
+    <div class="animated-sparkles">
+        <div class="sparkle" style="top: 15%; left: 10%; animation-delay: 0s; animation-duration: 12s;"></div>
+        <div class="sparkle" style="top: 30%; right: 12%; animation-delay: 2s; animation-duration: 16s;"></div>
+        <div class="sparkle" style="top: 48%; left: 18%; animation-delay: 4s; animation-duration: 14s;"></div>
+        <div class="sparkle" style="top: 68%; right: 8%; animation-delay: 1s; animation-duration: 17s;"></div>
+        <div class="sparkle" style="top: 85%; left: 6%; animation-delay: 3s; animation-duration: 13s;"></div>
+    </div>
 
     <!-- Floating Leaf Particles for natural, non-empty background decoration -->
     <div class="leaf-decorations">
@@ -64,11 +102,11 @@
     <section id="hero" class="hero w-100 min-vh-100 p-3 mx-auto text-center d-flex justify-content-center align-items-center text-white">
         <div class="bg-decor-left"></div>
         <div class="bg-decor-right"></div>
-        <main class="hero-card" data-aos="zoom-in" data-aos-duration="1500" style="max-width: 480px;">
-            <h3 style="font-family: 'Sacramento', cursive; font-size: 2.2rem; color: var(--gold-light); font-weight: normal; margin-bottom: 0.25rem;">Undangan</h3>
+        <main class="hero-card" data-aos="zoom-in" data-aos-duration="1500">
+            <h3 style="font-family: 'Sacramento', cursive; font-size: clamp(1.8rem, 5vw, 2.2rem); color: var(--gold-light); font-weight: normal; margin-bottom: 0.25rem;">Undangan</h3>
             @foreach ($infos as $info)
-            <h1 class="my-2" style="font-family: 'Sacramento', cursive; font-size: 3.2rem; color: #ffffff; text-shadow: 2px 4px 10px rgba(0,0,0,0.4); margin-bottom: 1.5rem; line-height: 1.2;">
-                {{ $info->nama_pengantin_pria }} <br> & <br> {{ $info->nama_pengantin_istri }}
+            <h1 class="hero-title-script my-2">
+                {{ $info->nama_pengantin_istri }} <br> & <br> {{ $info->nama_pengantin_pria }}
             </h1>
             @endforeach
 
@@ -79,7 +117,7 @@
             <div class="recipient-box mt-2">
                 <p class="mb-1 text-white-50" style="font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase;">Kepada</p>
                 <p class="mb-1 text-white-50" id="pronoun-container" style="font-size: 0.95rem; font-weight: 500; letter-spacing: 0.5px;">Yth. Bapak/Ibu/Saudara/i</p>
-                <h2 class="my-2 text-white" id="guest-name-container" style="font-size: 1.85rem; font-family: 'Playfair Display', serif; font-weight: 700; text-shadow: 1px 2px 5px rgba(0,0,0,0.2);">
+                <h2 class="my-2 text-white" id="guest-name-container" style="font-size: clamp(1.4rem, 5.5vw, 1.85rem); font-family: 'Playfair Display', serif; font-weight: 700; text-shadow: 1px 2px 5px rgba(0,0,0,0.2);">
                     <span></span>
                 </h2>
                 <p class="mt-3 text-white-50" style="font-size: 0.85rem; line-height: 1.6; max-width: 320px; margin: 0 auto; letter-spacing: 0.2px;">
@@ -95,39 +133,41 @@
     <!-- ==========================================================================
        HOME SECTION (THE COUPLE)
        ========================================================================== -->
-    <section id="home" class="home" style="padding: 6rem 0 4rem;">
+    <section id="home" class="home">
         <div class="bg-decor-left"></div>
         <div class="bg-decor-right"></div>
         <div class="container">
             <!-- Title "The Wedding" -->
             <div class="row justify-content-center" data-aos="fade-up">
                 <div class="col-md-10 text-center">
-                    <h2 class="mb-4" style="font-family: 'Sacramento', cursive; font-size: 4rem; color: var(--sage-dark);">The Wedding</h2>
+                    <h2 class="mb-4 section-heading-script">The Wedding</h2>
                 </div>
             </div>
 
             <!-- Names, Date, Save The Date Badge, and Countdown -->
-            <div class="row justify-content-center mt-5" data-aos="fade-up">
+            <div class="row justify-content-center mt-3 mt-md-5" data-aos="fade-up">
                 <div class="col-md-10 text-center">
-                    <div style="margin-bottom: 1rem; text-align: center;">
-                        <img src="{{ asset('assets/img/thewedding.webp') }}" alt="The Wedding Wreath" style="max-width: 180px; height: auto; display: inline-block;">
+                    <div class="text-center">
+                        <div class="wreath-wrapper">
+                            <img src="{{ asset('assets/img/wa-preview.png') }}" alt="The Wedding Wreath" class="wreath-img">
+                        </div>
                     </div>
                     @foreach ($infos as $info)
-                    <h2 class="mb-0" style="font-family: 'Sacramento', cursive; font-size: 3.2rem; color: var(--sage-dark); line-height: 1.2;">
-                        {{ $info->nama_pengantin_pria }}
-                    </h2>
-                    <div style="font-family: 'Sacramento', cursive; font-size: 2rem; color: var(--sage-medium); line-height: 1.1; margin: 0.1rem 0;">
-                        &amp;
-                    </div>
-                    <h2 class="mb-1" style="font-family: 'Sacramento', cursive; font-size: 3.2rem; color: var(--sage-dark); line-height: 1.2;">
+                    <h2 class="mb-0 couple-name-script">
                         {{ $info->nama_pengantin_istri }}
                     </h2>
-                    <h3 class="mb-3" style="font-family: 'Playfair Display', serif; font-size: 1.35rem; color: var(--sage-medium); font-weight: 600;">
+                    <div style="font-family: 'Sacramento', cursive; font-size: clamp(1.6rem, 5vw, 2rem); color: var(--sage-medium); line-height: 1.1; margin: 0.1rem 0;">
+                        &amp;
+                    </div>
+                    <h2 class="mb-1 couple-name-script">
+                        {{ $info->nama_pengantin_pria }}
+                    </h2>
+                    <h3 class="mb-3" style="font-family: 'Playfair Display', serif; font-size: clamp(1.1rem, 4vw, 1.35rem); color: var(--sage-medium); font-weight: 600;">
                         {{ \Carbon\Carbon::parse($info->tanggal_pernikahan)->translatedFormat('d F Y') }}
                     </h3>
 
                     <div class="mb-4 mt-2">
-                        <span class="badge px-4 py-2.5 text-white" style="background-color: var(--sage-dark); font-size: 0.95rem; font-weight: 500; border-radius: 20px; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(62,75,109,0.15); display: inline-block;">Save The Date</span>
+                        <span class="badge px-3 px-md-4 py-2.5 text-white" style="background-color: var(--sage-dark); font-size: 0.95rem; font-weight: 500; border-radius: 20px; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(62,75,109,0.15); display: inline-block;">Save The Date</span>
                     </div>
 
                     <!-- Circular Hitung Mundur Acara -->
@@ -138,47 +178,11 @@
                 </div>
             </div>
 
-            <!-- Couple Profiles -->
+            <!-- Couple Profiles (BRIDE FIRST, THEN GROOM) -->
             <div class="row justify-content-center align-items-center mt-3 g-4">
 
-                <!-- GROOM (PRIA) -->
-                <div class="col-12 col-lg-5 order-1 mb-4 mb-lg-0" data-aos="fade-right">
-                    <div class="couple-card text-center">
-                        <div class="photo-container">
-                            @foreach ($biodataPria as $pria)
-                            <img src="{{ $pria->foto ? asset('storage/' . $pria->foto) : asset('assets/img/me.png') }}"
-                                class="wedding-img-circle" loading="lazy" width="220" height="310" alt="Foto Pengantin Pria">
-                            @endforeach
-                        </div>
-                        @foreach ($biodataPria as $pria)
-                        <h3 class="mt-3">{{ $pria->nama }}</h3>
-                        <p class="text-muted small px-3">{{ $pria->deskripsi }}</p>
-                        <div class="parents-info mt-3 pt-3 border-top border-light">
-                            <p class="small text-muted mb-1">Putra dari Pasangan</p>
-                            <p class="fw-bold mb-0 text-dark">{{ $pria->bapak }}</p>
-                            <p class="small text-muted my-1">&</p>
-                            <p class="fw-bold text-dark mb-0">{{ $pria->ibu }}</p>
-                            @if(!empty($pria->asal))
-                            <p class="small mt-2 mb-0" style="color: var(--gold); font-weight: 500;">
-                                <i class="bi bi-geo-alt-fill me-1"></i>{{ $pria->asal }}
-                            </p>
-                            @endif
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-
-                <!-- HEART / WEDDING RINGS SPLITTER -->
-                <div class="col-12 col-lg-2 order-2 my-4 my-lg-0" data-aos="zoom-in">
-                    <div class="rings-divider">
-                        <div class="heart-icon">
-                            <i class="bi bi-heart-fill"></i>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- BRIDE (WANITA) -->
-                <div class="col-12 col-lg-5 order-3" data-aos="fade-left">
+                <div class="col-12 col-lg-5 order-1 mb-4 mb-lg-0" data-aos="fade-right">
                     <div class="couple-card text-center">
                         <div class="photo-container">
                             @foreach ($biodataWanita as $wanita)
@@ -204,6 +208,42 @@
                     </div>
                 </div>
 
+                <!-- HEART / WEDDING RINGS SPLITTER -->
+                <div class="col-12 col-lg-2 order-2 my-4 my-lg-0" data-aos="zoom-in">
+                    <div class="rings-divider">
+                        <div class="heart-icon">
+                            <i class="bi bi-heart-fill"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GROOM (PRIA) -->
+                <div class="col-12 col-lg-5 order-3" data-aos="fade-left">
+                    <div class="couple-card text-center">
+                        <div class="photo-container">
+                            @foreach ($biodataPria as $pria)
+                            <img src="{{ $pria->foto ? asset('storage/' . $pria->foto) : asset('assets/img/me.png') }}"
+                                class="wedding-img-circle" loading="lazy" width="220" height="310" alt="Foto Pengantin Pria">
+                            @endforeach
+                        </div>
+                        @foreach ($biodataPria as $pria)
+                        <h3 class="mt-3">{{ $pria->nama }}</h3>
+                        <p class="text-muted small px-3">{{ $pria->deskripsi }}</p>
+                        <div class="parents-info mt-3 pt-3 border-top border-light">
+                            <p class="small text-muted mb-1">Putra dari Pasangan</p>
+                            <p class="fw-bold mb-0 text-dark">{{ $pria->bapak }}</p>
+                            <p class="small text-muted my-1">&</p>
+                            <p class="fw-bold text-dark mb-0">{{ $pria->ibu }}</p>
+                            @if(!empty($pria->asal))
+                            <p class="small mt-2 mb-0" style="color: var(--gold); font-weight: 500;">
+                                <i class="bi bi-geo-alt-fill me-1"></i>{{ $pria->asal }}
+                            </p>
+                            @endif
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+
             </div>
 
 
@@ -221,15 +261,15 @@
     $teksPenutup = $infoItem?->teks_penutup ?: 'Kami memohon do\'a restu agar menjadi keluarga yang Sakinah Mawaddah Warahmah. Atas perhatiannya, kami ucapkan terimakasih.';
     $salamPenutup = $infoItem?->salam_penutup ?: "Wassalamu'alaikum Warahmatullahi Wabarakatuh";
     @endphp
-    <section id="doa" class="doa py-5" style="background-color: transparent;">
+    <section id="doa" class="doa py-4 py-md-5" style="background-color: transparent;">
         <div class="container">
             <div class="row justify-content-center" data-aos="fade-up">
                 <div class="col-12 col-md-10 col-lg-8 text-center">
-                    <div class="couple-card p-5 shadow-sm" style="background: var(--cream-accent); border: 1px solid rgba(124, 142, 122, 0.15); border-radius: 30px;">
+                    <div class="couple-card p-4 p-md-5 shadow-sm" style="background: var(--cream-accent); border: 1px solid rgba(124, 142, 122, 0.15); border-radius: 30px;">
 
                         <!-- Calligraphy Bismillah / Teks Arab -->
                         @if ($teksArab)
-                        <p class="mb-4 text-center arabic-text" dir="rtl" style="font-family: 'Amiri', 'Noto Naskh Arabic', 'Playfair Display', serif; font-size: 1.9rem; font-weight: bold; color: var(--sage-dark); letter-spacing: 0.5px; line-height: 1.8;">
+                        <p class="mb-4 text-center arabic-text-responsive fw-bold" dir="rtl" style="color: var(--sage-dark); letter-spacing: 0.5px;">
                             {!! nl2br(e($teksArab)) !!}
                         </p>
                         @endif
@@ -241,13 +281,13 @@
                         @endif
 
                         @if ($teksPembuka)
-                        <p class="mb-4 text-muted" style="font-size: 1rem; line-height: 1.8; letter-spacing: 0.2px;">
+                        <p class="mb-4 text-muted" style="font-size: 0.98rem; line-height: 1.8; letter-spacing: 0.2px;">
                             {!! nl2br(e($teksPembuka)) !!}
                         </p>
                         @endif
 
                         @if ($teksPenutup)
-                        <p class="mb-4 text-muted" style="font-size: 1rem; line-height: 1.8; letter-spacing: 0.2px;">
+                        <p class="mb-4 text-muted" style="font-size: 0.98rem; line-height: 1.8; letter-spacing: 0.2px;">
                             {!! nl2br(e($teksPenutup)) !!}
                         </p>
                         @endif
@@ -284,7 +324,7 @@
 
                     {{-- Google Maps Embed - Dinamis dari Koordinat Database --}}
                     <div class="info-map-container mb-4">
-                        <div class="ratio ratio-21x9">
+                        <div class="ratio ratio-16x9 ratio-md-21x9">
                             @if($info->latitude && $info->longitude)
                             {{-- Embed berdasarkan koordinat yang sudah tersimpan --}}
                             <iframe
@@ -324,7 +364,7 @@
             </div>
 
             <!-- Event Cards for Akad & Resepsi -->
-            <div class="row justify-content-center mt-5 g-4">
+            <div class="row justify-content-center mt-4 mt-md-5 g-4">
                 @php
                 // Calendar link generator parameters
                 $eventTitle = 'Pernikahan ' . $info->nama_pengantin_pria . ' & ' . $info->nama_pengantin_istri;
@@ -346,12 +386,12 @@
                         </div>
                         <div class="card-body d-flex flex-column justify-content-between">
                             <div class="row g-2 align-items-center justify-content-center">
-                                <div class="col-6 border-end border-light-subtle">
+                                <div class="col-6 border-end border-light-subtle px-1 px-sm-2">
                                     <i class="bi bi-clock d-block mb-2"></i>
                                     <span>{{ \Carbon\Carbon::parse($info->mulai_akad)->format('H.i') }} -
                                         {{ \Carbon\Carbon::parse($info->selesai_akad)->format('H.i') }}</span>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-6 px-1 px-sm-2">
                                     <i class="bi bi-calendar3 d-block mb-2"></i>
                                     <span>{{ \Carbon\Carbon::parse($info->tanggal_pernikahan)->translatedFormat('l') }}<br>
                                         <strong>{{ \Carbon\Carbon::parse($info->tanggal_pernikahan)->translatedFormat('d F Y') }}</strong></span>
@@ -377,11 +417,11 @@
                         </div>
                         <div class="card-body d-flex flex-column justify-content-between">
                             <div class="row g-2 align-items-center justify-content-center">
-                                <div class="col-6 border-end border-light-subtle">
+                                <div class="col-6 border-end border-light-subtle px-1 px-sm-2">
                                     <i class="bi bi-clock d-block mb-2"></i>
                                     <span>{{ \Carbon\Carbon::parse($info->mulai_resepsi)->format('H.i') }} - Selesai</span>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-6 px-1 px-sm-2">
                                     <i class="bi bi-calendar3 d-block mb-2"></i>
                                     <span>{{ \Carbon\Carbon::parse($info->tanggal_pernikahan)->translatedFormat('l') }}<br>
                                         <strong>{{ \Carbon\Carbon::parse($info->tanggal_pernikahan)->translatedFormat('d F Y') }}</strong></span>
@@ -402,9 +442,6 @@
         </div>
     </section>
     @endif
-    </div>
-    </div>
-    </section>
 
     <!-- ==========================================================================
        STORY SECTION (LOVE JOURNEY)
@@ -414,7 +451,7 @@
         <div class="bg-decor-right"></div>
         <div class="container">
             @if($story)
-            <div class="row justify-content-center mb-5" data-aos="fade-up">
+            <div class="row justify-content-center mb-4 mb-md-5" data-aos="fade-up">
                 <div class="col-md-8 col-10 text-center">
                     <span class="subtitle">Bagaimana Cinta Kami Bersemi</span>
                     <h2>Cerita Kami</h2>
@@ -434,7 +471,7 @@
                             <div class="timeline-panel">
                                 @if($story->foto_bertemu)
                                 <div class="timeline-img-wrapper mb-3 text-center">
-                                    <img src="{{ asset('storage/' . $story->foto_bertemu) }}" class="img-fluid rounded" alt="Foto Bertemu" style="max-height: 200px; object-fit: cover; border-radius: 12px; width: 100%;">
+                                    <img src="{{ asset('storage/' . $story->foto_bertemu) }}" class="img-fluid rounded" loading="lazy" decoding="async" alt="Foto Bertemu" style="max-height: 200px; object-fit: cover; border-radius: 12px; width: 100%;">
                                 </div>
                                 @endif
                                 <div class="timeline-heading">
@@ -455,7 +492,7 @@
                             <div class="timeline-panel">
                                 @if($story->foto_serius)
                                 <div class="timeline-img-wrapper mb-3 text-center">
-                                    <img src="{{ asset('storage/' . $story->foto_serius) }}" class="img-fluid rounded" alt="Foto Serius" style="max-height: 200px; object-fit: cover; border-radius: 12px; width: 100%;">
+                                    <img src="{{ asset('storage/' . $story->foto_serius) }}" class="img-fluid rounded" loading="lazy" decoding="async" alt="Foto Serius" style="max-height: 200px; object-fit: cover; border-radius: 12px; width: 100%;">
                                 </div>
                                 @endif
                                 <div class="timeline-heading">
@@ -476,7 +513,7 @@
                             <div class="timeline-panel">
                                 @if($story->foto_tunangan)
                                 <div class="timeline-img-wrapper mb-3 text-center">
-                                    <img src="{{ asset('storage/' . $story->foto_tunangan) }}" class="img-fluid rounded" alt="Foto Tunangan" style="max-height: 200px; object-fit: cover; border-radius: 12px; width: 100%;">
+                                    <img src="{{ asset('storage/' . $story->foto_tunangan) }}" class="img-fluid rounded" loading="lazy" decoding="async" alt="Foto Tunangan" style="max-height: 200px; object-fit: cover; border-radius: 12px; width: 100%;">
                                 </div>
                                 @endif
                                 <div class="timeline-heading">
@@ -505,79 +542,53 @@
         <div class="container">
             <div class="row justify-content-center" data-aos="fade-up">
                 <div class="col-md-8 col-10 text-center">
-                    <h2>Konfirmasi Kehadiran</h2>
-                    <p class="lead">Isi formulir di bawah ini untuk melakukan konfirmasi kehadiran Anda.</p>
+                    <h2>Konfirmasi Kehadiran & Doa Restu</h2>
+                    <p class="lead">Isi formulir di bawah ini untuk mengonfirmasi kehadiran serta memberikan ucapan & doa restu bagi kedua mempelai.</p>
                 </div>
             </div>
 
-            <!-- Sleek RSVP Form Container -->
-            <div class="rsvp-form-container mt-4">
-                <form class="row g-3 justify-content-center" data-aos="fade-up"
-                    action="{{ route('rsvp.store') }}" id="my-form">
-                    @csrf
-                    <div class="col-md-6 text-start">
-                        <label for="nama" class="form-label">Nama Anda</label>
-                        <input type="text" class="form-control" id="nama" name="nama_tamu" required placeholder="Nama Lengkap">
-                    </div>
-                    <div class="col-md-3 text-start">
-                        <label for="jumlah" class="form-label">Jumlah Tamu</label>
-                        <select class="form-select" id="jumlah" name="jumlah">
-                            <option value="1" selected>1 Orang</option>
-                            <option value="2">2 Orang</option>
-                            <option value="3">3 Orang</option>
-                            <option value="4">4 Orang</option>
-                            <option value="5">5 Orang</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3 text-start">
-                        <label for="status" class="form-label">Konfirmasi</label>
-                        <select name="kehadiran" id="status" class="form-select" required>
-                            <option value="" disabled selected>Pilih salah satu</option>
-                            <option value="1">Hadir</option>
-                            <option value="0">Tidak Hadir</option>
-                        </select>
-                    </div>
-                    <div class="col-12 mt-4 text-center">
-                        <button type="submit" class="btn btn-lg px-5">
-                            <i class="bi bi-send-fill me-2"></i> Kirim Konfirmasi
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Wishes (Guestbook) Section -->
-            <div class="row justify-content-center mt-5">
+            <!-- Single Unified RSVP & Wishes Form -->
+            <div class="row justify-content-center mt-4">
                 <div class="col-md-8 text-center" data-aos="fade-up">
-                    <h3 class="fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: var(--gold-light);">Ucapan & Doa Restu</h3>
-                    <p class="text-white-50 mb-4">Berikan ucapan selamat, harapan, dan doa restu Anda untuk kedua mempelai.</p>
-
-                    <!-- Wishes Form -->
                     <div class="rsvp-form-container text-start mb-5" style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1);">
                         <form id="wish-form" action="{{ route('wish.storePublic') }}" method="POST">
                             @csrf
                             <div class="row g-3">
-                                <div class="col-md-7">
+                                <div class="col-md-6">
                                     <label for="wish_nama" class="form-label">Nama Anda</label>
                                     <input type="text" class="form-control" id="wish_nama" name="nama" required placeholder="Nama Lengkap">
                                 </div>
-                                <div class="col-md-5">
-                                    <label for="wish_kehadiran" class="form-label">Kehadiran</label>
+                                <div class="col-md-3">
+                                    <label for="wish_kehadiran" class="form-label">Konfirmasi</label>
                                     <select name="kehadiran" id="wish_kehadiran" class="form-select" required>
                                         <option value="" disabled selected>Pilih salah satu</option>
                                         <option value="1">Hadir</option>
                                         <option value="0">Tidak Hadir</option>
                                     </select>
                                 </div>
-                                <div class="col-12">
-                                    <label for="wish_ucapan" class="form-label">Ucapan & Doa</label>
-                                    <textarea class="form-control" id="wish_ucapan" name="ucapan" rows="3" required placeholder="Tulis ucapan & doa restu Anda..."></textarea>
+                                <div class="col-md-3">
+                                    <label for="wish_jumlah" class="form-label">Jumlah Tamu</label>
+                                    <select class="form-select" id="wish_jumlah" name="jumlah">
+                                        <option value="1" selected>1 Orang</option>
+                                        <option value="2">2 Orang</option>
+                                        <option value="3">3 Orang</option>
+                                        <option value="4">4 Orang</option>
+                                        <option value="5">5 Orang</option>
+                                    </select>
                                 </div>
-                                <div class="col-12 text-center mt-3">
-                                    <button type="submit" class="btn btn-primary px-4"><i class="bi bi-chat-heart-fill me-2"></i> Kirim Ucapan</button>
+                                <div class="col-12">
+                                    <label for="wish_ucapan" class="form-label">Ucapan & Doa Restu</label>
+                                    <textarea class="form-control" id="wish_ucapan" name="ucapan" rows="3" required placeholder="Tulis ucapan selamat & doa restu Anda..."></textarea>
+                                </div>
+                                <div class="col-12 text-center mt-4">
+                                    <button type="submit" class="btn btn-primary px-4 px-md-5 py-2.5 w-100 w-sm-auto"><i class="bi bi-send-fill me-2"></i> Kirim Konfirmasi & Ucapan</button>
                                 </div>
                             </div>
                         </form>
                     </div>
+
+                    <!-- Wishes Feed Header -->
+                    <h3 class="fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: var(--gold-light);">Ucapan & Doa Restu Terbaru</h3>
 
                     <!-- Wishes Feed -->
                     <div class="wishes-container text-start" id="wishes-feed">
@@ -614,51 +625,38 @@
        ========================================================================== -->
     <section id="gifts" class="gifts">
         <div class="container">
-            @isset($gifts)
-            @foreach ($gifts as $gift)
+            @if(isset($gifts) && $gifts->count() > 0)
             <div class="row justify-content-center" data-aos="fade-up">
                 <div class="col-md-8 col-10 text-center">
                     <span class="subtitle">Ungkapan Tanda Kasih</span>
                     <h2>Kirim Hadiah</h2>
-                    <p class="text-muted mt-3 mb-4">{{ $gift->deskripsi }}</p>
+                    <p class="text-muted mt-3 mb-4">{{ $gifts->whereNotNull('deskripsi')->first()->deskripsi ?? 'Bagi bapak/ibu/saudara/i yang ingin memberikan hadiah pernikahan, dapat melalui rekening/e-wallet di bawah ini:' }}</p>
                 </div>
             </div>
 
             <div class="row justify-content-center text-center g-4" data-aos="zoom-in">
+                @foreach ($gifts as $gift)
                 <div class="col-md-6 col-lg-5">
 
-                    <!-- Digital Debit Card layout for premium digital experience -->
-                    <div class="digital-card">
+                    <!-- Digital Debit Card layout with custom admin background color -->
+                    <div class="digital-card mb-4" style="background: {{ $gift->bg_color ?? 'linear-gradient(135deg, #3e4b6d 0%, #252e45 100%)' }}; border: 1px solid rgba(255,255,255,0.15);">
                         <div class="card-bank-name">{{ $gift->nama_bank }}</div>
                         <div class="card-chip"></div>
                         <div class="card-number-container">
                             <span class="card-number">{{ $gift->no_rek }}</span>
                         </div>
                         <div class="card-holder">Atas Nama</div>
-                        <div class="card-holder-name">{{ $gift->nama }}</div>
+                        <div class="card-holder-name me-5 me-sm-0">{{ $gift->nama }}</div>
 
                         <button class="btn-copy-card btn-sm" onclick="copyCardNumber('{{ $gift->no_rek }}', this)">
-                            <i class="bi bi-clipboard me-1"></i> Salin Rekening
+                            <i class="bi bi-clipboard me-1"></i> Salin
                         </button>
                     </div>
 
-                    @if($gift->gambar)
-                    <!-- Saweria QR Code / E-Wallet Card -->
-                    <div class="digital-card qr-card mt-4" style="background: linear-gradient(135deg, #3e4b6d 0%, #252e45 100%);">
-                        <div class="qr-card-title">Saweria / QR E-Wallet</div>
-                        <div class="qr-code-container">
-                            <img src="{{ asset('storage/' . $gift->gambar) }}"
-                                class="img-fluid" width="160" alt="QR Code Hadiah" style="border-radius: 8px;">
-                        </div>
-                        <div class="card-holder">Atas Nama</div>
-                        <div class="card-holder-name">{{ $gift->nama }}</div>
-                    </div>
-                    @endif
-
                 </div>
+                @endforeach
             </div>
-            @endforeach
-            @endisset
+            @endif
         </div>
     </section>
 
@@ -671,25 +669,25 @@
             <div class="row justify-content-center" data-aos="fade-up">
                 <div class="col-12 col-md-10 col-lg-8">
                     <!-- Main Container Card -->
-                    <div class="couple-card p-4 p-md-5 shadow-sm text-start" style="background: var(--cream-accent, #faf9f6); border: 1px solid rgba(124, 142, 122, 0.2); border-radius: 28px; box-shadow: 0 10px 35px rgba(0, 0, 0, 0.06);">
+                    <div class="couple-card p-3 p-sm-4 p-md-5 shadow-sm text-start" style="background: var(--cream-accent, #faf9f6); border: 1px solid rgba(124, 142, 122, 0.2); border-radius: 28px; box-shadow: 0 10px 35px rgba(0, 0, 0, 0.06);">
 
                         <!-- Verse Quote Header (QS. Ar Rum:21) -->
-                        <div class="text-center mb-5 pb-3 border-bottom border-light">
-                            <h3 class="mb-3" style="font-family: 'Sacramento', 'Playfair Display', cursive, serif; font-size: 2.1rem; color: var(--sage-dark, #2c3e50); font-weight: bold;">QS. Ar Rum:21</h3>
-                            <p class="mb-3 arabic-text" dir="rtl" style="font-family: 'Amiri', 'Noto Naskh Arabic', serif; font-size: 1.5rem; color: var(--sage-dark, #2c3e50); line-height: 2.2;">
+                        <div class="text-center mb-4 mb-md-5 pb-3 border-bottom border-light">
+                            <h3 class="mb-3" style="font-family: 'Sacramento', 'Playfair Display', cursive, serif; font-size: clamp(1.6rem, 5vw, 2.1rem); color: var(--sage-dark, #2c3e50); font-weight: bold;">QS. Ar Rum:21</h3>
+                            <p class="mb-3 arabic-text-responsive text-center" dir="rtl" style="color: var(--sage-dark, #2c3e50);">
                                 وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً ۚ إِنَّ فِي ذَٰلِكَ لَآيَاتٍ لِّقَوْمٍ يَتَفَكَّرُونَ
                             </p>
-                            <p class="fst-italic px-2 px-md-4 mb-0" style="font-family: 'Georgia', 'Playfair Display', serif; font-size: 0.98rem; line-height: 1.8; color: #4a5568;">
+                            <p class="fst-italic px-1 px-md-4 mb-0" style="font-family: 'Georgia', 'Playfair Display', serif; font-size: 0.95rem; line-height: 1.8; color: #4a5568;">
                                 "Dan diantara tanda – tanda kekuasaan-Nya ialah cipataan-Nya untukmu pasangan hidup dari jenismu sendiri, supaya kamu mendapatkan ketenangan hati dan dijadikan-Nya kasih sayang diatara kamu. Sesungguhnya yang demikian menjadi tanda- tanda kebesaran-Nya bagi orang – orang yang berfikir"
                             </p>
                         </div>
 
                         <!-- Turut Mengundang Numbered List -->
-                        <div class="px-2 px-md-4">
-                            <h4 class="fw-bold mb-3" style="font-family: 'Playfair Display', serif; font-size: 1.25rem; color: #1a202c;">
+                        <div class="px-1 px-md-4">
+                            <h4 class="fw-bold mb-3" style="font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #1a202c;">
                                 Turut Mengundang:
                             </h4>
-                            <ol class="ps-0 mb-0 list-unstyled" style="font-family: 'Georgia', serif; font-size: 1.05rem; color: #2d3748; line-height: 2.1;">
+                            <ol class="ps-0 mb-0 list-unstyled" style="font-family: 'Georgia', serif; font-size: 0.98rem; color: #2d3748; line-height: 2;">
                                 @foreach ($turutMengundangs as $item)
                                 <li class="d-flex align-items-baseline mb-2">
                                     <span class="fw-bold me-2" style="min-width: 24px; color: var(--sage-dark, #2c3e50);">{{ $loop->iteration }}.</span>
@@ -710,63 +708,63 @@
                         $priaObj = isset($biodataPria) && $biodataPria->count() > 0 ? $biodataPria->first() : null;
                         $wanitaObj = isset($biodataWanita) && $biodataWanita->count() > 0 ? $biodataWanita->first() : null;
                         @endphp
-                        <div class="mt-5 pt-4 text-center border-top border-light">
+                        <div class="mt-4 mt-md-5 pt-4 text-center border-top border-light">
                             <!-- Teks Penutup -->
-                            <p class="mb-4 px-2 px-md-4" style="font-family: 'Georgia', serif; font-size: 1.05rem; color: #4a5568; line-height: 1.8;">
+                            <p class="mb-4 px-1 px-md-4" style="font-family: 'Georgia', serif; font-size: 0.98rem; color: #4a5568; line-height: 1.8;">
                                 {{ $infoItem?->teks_penutup ?: "Atas kehadiran dan do'a restu dari Bapak/Ibu/Saudara/i sekalian, kami mengucapkan terima kasih." }}
                             </p>
 
                             <!-- Salam Penutup Arab / Teks -->
-                            <p class="mb-4 fw-bold arabic-text" dir="rtl" style="font-family: 'Amiri', 'Noto Naskh Arabic', serif; font-size: 1.6rem; color: var(--sage-dark, #2c3e50); line-height: 1.8;">
+                            <p class="mb-4 fw-bold arabic-text-responsive text-center" dir="rtl" style="color: var(--sage-dark, #2c3e50);">
                                 {{ $infoItem?->salam_penutup ?: 'وَ السَّلاَمُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ' }}
                             </p>
 
                             <!-- Hormat Kami & Parents -->
                             <div class="mb-4">
-                                <p class="mb-2" style="font-family: 'Georgia', serif; font-size: 1.05rem; color: #2d3748; font-weight: 500;">Hormat kami,</p>
+                                <p class="mb-2" style="font-family: 'Georgia', serif; font-size: 1rem; color: #2d3748; font-weight: 500;">Hormat kami,</p>
 
-                                @if($priaObj && ($priaObj->bapak || $priaObj->ibu))
-                                <p class="fw-bold mb-1" style="font-family: 'Georgia', serif; font-size: 1.05rem; color: #1a202c;">
-                                    Bapak {{ $priaObj->bapak }} &amp; Ibu {{ $priaObj->ibu }}
+                                @if($wanitaObj && ($wanitaObj->bapak || $wanitaObj->ibu))
+                                <p class="fw-bold mb-1" style="font-family: 'Georgia', serif; font-size: 1rem; color: #1a202c;">
+                                    Bapak {{ $wanitaObj->bapak }} &amp; Ibu {{ $wanitaObj->ibu }}
                                 </p>
                                 @endif
 
-                                @if($wanitaObj && ($wanitaObj->bapak || $wanitaObj->ibu))
-                                <p class="fw-bold mb-0" style="font-family: 'Georgia', serif; font-size: 1.05rem; color: #1a202c;">
-                                    Bapak {{ $wanitaObj->bapak }} &amp; Ibu {{ $wanitaObj->ibu }}
+                                @if($priaObj && ($priaObj->bapak || $priaObj->ibu))
+                                <p class="fw-bold mb-0" style="font-family: 'Georgia', serif; font-size: 1rem; color: #1a202c;">
+                                    Bapak {{ $priaObj->bapak }} &amp; Ibu {{ $priaObj->ibu }}
                                 </p>
                                 @endif
                             </div>
 
                             <!-- Mempelai Name & Photo Layout -->
                             <div class="mt-4 pt-2 text-center">
-                                <!-- 1. Nama Pengantin Pria (Atas) -->
-                                <h2 class="mb-2" style="font-family: 'Sacramento', cursive; font-size: 2.8rem; color: var(--sage-dark, #2c3e50); font-weight: bold; line-height: 1.2;">
-                                    {{ $priaObj?->nama ?: ($infoItem?->nama_pengantin_pria ?: 'Pengantin Pria') }}
+                                <!-- 1. Nama Pengantin Wanita (Atas) -->
+                                <h2 class="mb-2 couple-name-script">
+                                    {{ $wanitaObj?->nama ?: ($infoItem?->nama_pengantin_istri ?: 'Pengantin Wanita') }}
                                 </h2>
 
                                 <!-- 2. Foto Mempelai (Tengah) -->
                                 <div class="d-flex justify-content-center align-items-center my-3">
                                     <div class="couple-photo-wrapper position-relative p-2" style="background: rgba(255, 255, 255, 0.95); border-radius: 50px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 2px solid var(--gold, #c5a059); display: inline-block;">
-                                        @if($priaObj?->foto && $wanitaObj?->foto)
+                                        @if($wanitaObj?->foto && $priaObj?->foto)
                                         <div class="d-flex align-items-center gap-2 px-2">
-                                            <img src="{{ asset('storage/' . $priaObj->foto) }}" class="rounded-circle shadow-sm" style="width: 75px; height: 75px; object-fit: cover; border: 2px solid #fff;" alt="Pengantin Pria">
+                                            <img src="{{ asset('storage/' . $wanitaObj->foto) }}" class="rounded-circle shadow-sm mempelai-photo-closing" style="object-fit: cover; border: 2px solid #fff;" alt="Pengantin Wanita">
                                             <i class="bi bi-heart-fill text-danger fs-5 animate-pulse"></i>
-                                            <img src="{{ asset('storage/' . $wanitaObj->foto) }}" class="rounded-circle shadow-sm" style="width: 75px; height: 75px; object-fit: cover; border: 2px solid #fff;" alt="Pengantin Wanita">
+                                            <img src="{{ asset('storage/' . $priaObj->foto) }}" class="rounded-circle shadow-sm mempelai-photo-closing" style="object-fit: cover; border: 2px solid #fff;" alt="Pengantin Pria">
                                         </div>
-                                        @elseif($priaObj?->foto)
-                                        <img src="{{ asset('storage/' . $priaObj->foto) }}" class="rounded-circle shadow-sm" style="width: 100px; height: 100px; object-fit: cover;" alt="Pengantin Pria">
                                         @elseif($wanitaObj?->foto)
-                                        <img src="{{ asset('storage/' . $wanitaObj->foto) }}" class="rounded-circle shadow-sm" style="width: 100px; height: 100px; object-fit: cover;" alt="Pengantin Wanita">
+                                        <img src="{{ asset('storage/' . $wanitaObj->foto) }}" class="rounded-circle shadow-sm" style="width: 85px; height: 85px; object-fit: cover;" alt="Pengantin Wanita">
+                                        @elseif($priaObj?->foto)
+                                        <img src="{{ asset('storage/' . $priaObj->foto) }}" class="rounded-circle shadow-sm" style="width: 85px; height: 85px; object-fit: cover;" alt="Pengantin Pria">
                                         @else
-                                        <img src="{{ asset('assets/img/thewedding.webp') }}" class="rounded-circle shadow-sm" style="width: 100px; height: 100px; object-fit: cover;" alt="Mempelai">
+                                        <img src="{{ asset('assets/img/thewedding.webp') }}" class="rounded-circle shadow-sm" style="width: 85px; height: 85px; object-fit: cover;" alt="Mempelai">
                                         @endif
                                     </div>
                                 </div>
 
-                                <!-- 3. Nama Pengantin Wanita (Bawah) -->
-                                <h2 class="mt-2 mb-0" style="font-family: 'Sacramento', cursive; font-size: 2.8rem; color: var(--sage-dark, #2c3e50); font-weight: bold; line-height: 1.2;">
-                                    {{ $wanitaObj?->nama ?: ($infoItem?->nama_pengantin_istri ?: 'Pengantin Wanita') }}
+                                <!-- 3. Nama Pengantin Pria (Bawah) -->
+                                <h2 class="mt-2 mb-0 couple-name-script">
+                                    {{ $priaObj?->nama ?: ($infoItem?->nama_pengantin_pria ?: 'Pengantin Pria') }}
                                 </h2>
                             </div>
                         </div>
@@ -913,11 +911,34 @@
             }
 
             rootElement.style.scrollBehavior = 'auto';
+
+            // Ensure navbars stay hidden on initial cover view
+            const mobileNav = document.getElementById('mobile-bottom-nav');
+            const desktopNav = document.getElementById('desktop-top-nav');
+            if (mobileNav) {
+                mobileNav.classList.add('d-none');
+                mobileNav.classList.remove('d-flex');
+            }
+            if (desktopNav) {
+                desktopNav.classList.add('d-none');
+            }
         }
 
         function enableScroll() {
             window.onscroll = function() {}
             rootElement.style.scrollBehavior = 'smooth';
+
+            // Reveal navbars smoothly upon clicking Buka Undangan
+            const mobileNav = document.getElementById('mobile-bottom-nav');
+            const desktopNav = document.getElementById('desktop-top-nav');
+            if (mobileNav) {
+                mobileNav.classList.remove('d-none');
+                mobileNav.classList.add('d-md-none', 'd-flex');
+            }
+            if (desktopNav) {
+                desktopNav.classList.remove('d-none');
+            }
+
             playAudio();
         }
 
@@ -951,50 +972,22 @@
     <!-- Form Submit Handlers via Ajax -->
     <script>
         window.addEventListener("load", function() {
-            // RSVP Form Submit Handler
-            const form = document.getElementById('my-form');
-            if (form) {
-                form.addEventListener("submit", function(e) {
-                    e.preventDefault();
-                    const data = new window.FormData(form);
-                    const action = e.target.action;
-
-                    fetch(action, {
-                            method: 'POST',
-                            body: data,
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest'
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(result => {
-                            if (result.status === 'success') {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Terima Kasih!',
-                                    text: result.message,
-                                    confirmButtonColor: '#3e4b6d'
-                                });
-                                form.reset();
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: 'Terjadi kesalahan saat mengirim konfirmasi kehadiran.',
-                                confirmButtonColor: '#3e4b6d'
-                            });
-                        });
-                });
-            }
-
-            // Wishes Form Submit Handler
+            // Wishes & RSVP Form Submit Handler
             const wishForm = document.getElementById('wish-form');
             if (wishForm) {
                 wishForm.addEventListener("submit", function(e) {
                     e.preventDefault();
+                    if (window.hideGlobalPreloader) {
+                        window.hideGlobalPreloader();
+                    }
+
+                    const submitBtn = wishForm.querySelector('button[type="submit"]');
+                    const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Mengirim...';
+                    }
+
                     const data = new window.FormData(wishForm);
                     const action = e.target.action;
 
@@ -1002,10 +995,21 @@
                             method: 'POST',
                             body: data,
                             headers: {
-                                'X-Requested-With': 'XMLHttpRequest'
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'Accept': 'application/json'
                             }
                         })
-                        .then(response => response.json())
+                        .then(async response => {
+                            const result = await response.json();
+                            if (!response.ok) {
+                                let errorMsg = result.message || 'Terjadi kesalahan saat mengirim ucapan.';
+                                if (result.errors) {
+                                    errorMsg = Object.values(result.errors).flat().join('<br>');
+                                }
+                                throw new Error(errorMsg);
+                            }
+                            return result;
+                        })
                         .then(result => {
                             if (result.status === 'success') {
                                 Swal.fire({
@@ -1056,10 +1060,19 @@
                             console.error('Error:', error);
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Oops...',
-                                text: 'Terjadi kesalahan saat mengirim ucapan.',
+                                title: 'Gagal',
+                                html: error.message || 'Terjadi kesalahan saat mengirim ucapan.',
                                 confirmButtonColor: '#3e4b6d'
                             });
+                        })
+                        .finally(() => {
+                            if (window.hideGlobalPreloader) {
+                                window.hideGlobalPreloader();
+                            }
+                            if (submitBtn) {
+                                submitBtn.disabled = false;
+                                submitBtn.innerHTML = originalBtnText;
+                            }
                         });
                 });
             }

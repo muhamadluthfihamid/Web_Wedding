@@ -51,11 +51,13 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm">
                                     @if($user->isSuperAdmin())
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700">Superadmin</span>
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-700">Superadmin (Owner)</span>
                                     @elseif($user->isAdmin())
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700">Admin</span>
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">
+                                            {{ $user->isKhitanan() ? 'Penyewa (Khitanan)' : 'Penyewa (Pernikahan)' }}
+                                        </span>
                                     @else
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">User</span>
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">Customer (Non-Aktif)</span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
@@ -63,7 +65,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
                                      <div class="flex items-center justify-center gap-2">
-                                         <a href="{{ route('users.edit', $user->id) }}" 
+                                         <a href="{{ route('users.edit', $user) }}" 
                                             class="inline-flex items-center gap-1 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg text-xs font-semibold transition-colors">
                                              <i class="fas fa-edit"></i> Edit
                                          </a>
@@ -72,7 +74,7 @@
                                                  class="inline-flex items-center gap-1 px-3 py-1.5 bg-violet-50 hover:bg-violet-100 text-violet-700 rounded-lg text-xs font-semibold transition-colors btn-reset-password"
                                                  data-id="{{ $user->id }}"
                                                  data-name="{{ $user->full_name }}"
-                                                 data-url="{{ route('users.resetPassword', $user->id) }}">
+                                                 data-url="{{ route('users.resetPassword', $user) }}">
                                              <i class="fas fa-key"></i> Reset PW
                                          </button>
                                          

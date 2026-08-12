@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Gallery;
 use App\Models\Info;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -12,18 +13,18 @@ class GalleryController extends Controller
 {
     public function index()
     {
-        $user = auth()->user();
-        $galeries = $user->isSuperAdmin()
-            ? Gallery::with(['images', 'pria', 'istri'])->get()
-            : Gallery::where('user_id', $user->id)->with(['images', 'pria', 'istri'])->get();
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $galeries = Gallery::where('user_id', $user->id)->with(['images', 'pria', 'istri'])->get();
 
         return view('admin.gallery.index', compact('galeries'));
     }
 
     public function create()
     {
-        $user = auth()->user();
-        $infos = $user->isSuperAdmin() ? Info::all() : Info::where('user_id', $user->id)->get();
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $infos = Info::where('user_id', $user->id)->get();
         return view('admin.gallery.create', compact('infos'));
     }
 
@@ -40,7 +41,7 @@ class GalleryController extends Controller
 
         try {
             $gallery = Gallery::create([
-                'user_id' => auth()->id(),
+                'user_id' => Auth::id(),
                 'id_nama_pengantin_istri' => $request->id_nama_pengantin_istri,
                 'id_nama_pengantin_pria' => $request->id_nama_pengantin_pria,
                 'deskripsi' => $request->deskripsi,
@@ -59,7 +60,7 @@ class GalleryController extends Controller
 
             DB::commit();
 
-            return redirect()->route('gallery.index')->with('success', 'Gallery berhasil dibuat');
+            return redirect()->route('gallery.index')->with('success', 'Galeri foto berhasil ditambahkan.');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -110,7 +111,7 @@ class GalleryController extends Controller
 
             DB::commit();
 
-            return redirect()->route('gallery.index')->with('success', 'Gallery berhasil diupdate');
+            return redirect()->route('gallery.index')->with('success', 'Galeri foto berhasil diperbarui.');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -135,7 +136,7 @@ class GalleryController extends Controller
 
             DB::commit();
 
-            return redirect()->route('gallery.index')->with('success', 'Gallery berhasil dihapus');
+            return redirect()->route('gallery.index')->with('success', 'Galeri foto berhasil dihapus.');
 
         } catch (\Exception $e) {
             DB::rollBack();

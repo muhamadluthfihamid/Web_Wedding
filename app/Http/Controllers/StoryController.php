@@ -4,14 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Story;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class StoryController extends Controller
 {
     public function index()
     {
-        $user = auth()->user();
-        $story = $user->isSuperAdmin() ? Story::latest()->first() : Story::where('user_id', $user->id)->latest()->first();
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $story = Story::where('user_id', $user->id)->latest()->first();
         return view('admin.story.index', compact('story'));
     }
 
@@ -39,7 +41,7 @@ class StoryController extends Controller
         ]);
 
         $data = $validated;
-        $data['user_id'] = auth()->id();
+        $data['user_id'] = Auth::id();
 
         // Upload foto bertemu
         if ($request->hasFile('foto_bertemu')) {
@@ -58,19 +60,28 @@ class StoryController extends Controller
 
         Story::create($data);
 
-        return redirect()->route('story.index')->with('success', 'Story created successfully.');
+        return redirect()->route('story.index')->with('success', 'Cerita kita berhasil ditambahkan.');
     }
 
 
 
     public function edit(Story $story)
     {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$user->isSuperAdmin() && $story->user_id !== $user->id) {
+            abort(403, 'Anda tidak memiliki akses ke data ini.');
+        }
         return view('admin.story.edit', compact('story'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Story $story)
     {
-        $story = Story::findOrFail($id);
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$user->isSuperAdmin() && $story->user_id !== $user->id) {
+            abort(403, 'Anda tidak memiliki akses ke data ini.');
+        }
 
         $validated = $request->validate([
             'deskripsi' => 'required',
@@ -115,12 +126,16 @@ class StoryController extends Controller
         $story->update($data);
 
         return redirect()->route('story.index')
-            ->with('success', 'Story berhasil diupdate');
+            ->with('success', 'Cerita kita berhasil diperbarui.');
     }
 
-    public function destroy($id)
+    public function destroy(Story $story)
     {
-        $story = Story::findOrFail($id);
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$user->isSuperAdmin() && $story->user_id !== $user->id) {
+            abort(403, 'Anda tidak memiliki akses ke data ini.');
+        }
 
         // Hapus foto bertemu
         if ($story->foto_bertemu && Storage::exists('public/' . $story->foto_bertemu)) {
@@ -140,6 +155,6 @@ class StoryController extends Controller
         // Hapus data dari database
         $story->delete();
 
-        return redirect()->route('story.index')->with('success', 'Story berhasil dihapus');
+        return redirect()->route('story.index')->with('success', 'Cerita kita berhasil dihapus.');
     }
 }

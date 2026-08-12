@@ -38,13 +38,17 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    protected function redirectTo()
+    protected function authenticated(\Illuminate\Http\Request $request, $user)
     {
-        session()->flash('success', 'You are logged in!');
-        $user = auth()->user();
+        session()->flash('success', 'Berhasil masuk! Selamat datang kembali, ' . $user->name . '.');
         if ($user && $user->isUser() && !$user->hasActiveRental()) {
-            return route('rental.status');
+            return redirect()->route('rental.status');
         }
-        return $this->redirectTo;
+        return redirect()->intended($this->redirectTo);
+    }
+
+    protected function loggedOut(\Illuminate\Http\Request $request)
+    {
+        return redirect()->route('login')->with('success', 'Berhasil keluar dari akun.');
     }
 }
