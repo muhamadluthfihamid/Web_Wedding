@@ -71,9 +71,7 @@ Route::prefix('admin')->group(function () {
 
     Route::get('/', function () {
         return view('auth.login');
-    })->name('login');
-
-    Auth::routes();
+    })->name('login.admin');
 
     Route::middleware(['auth', 'role:superadmin,admin'])->group(function () {
 
