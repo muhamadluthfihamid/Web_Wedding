@@ -84,7 +84,7 @@ Route::prefix('admin')->group(function () {
 
     Route::get('/', function () {
         return view('auth.login');
-    })->name('login');
+    })->name('admin.login');
 
     Auth::routes();
 
