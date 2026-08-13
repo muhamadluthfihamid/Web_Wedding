@@ -80,9 +80,10 @@ Route::get('/rental-info', function () {
 */
 Route::prefix('admin')->group(function () {
 
+    // Redirect /admin → login (no name needed; nothing references this route by name)
     Route::get('/', function () {
         return redirect()->route('login');
-    })->name('login.admin');
+    });
 
     Route::middleware(['auth', 'role:superadmin,admin'])->group(function () {
 
@@ -116,7 +117,6 @@ Route::prefix('admin')->group(function () {
         Route::resource('wish', WishController::class)->only(['index', 'destroy']);
 
         Route::get('/profile',  [ProfileController::class, 'index'])->name('profile.index');
-        Route::get('/profile-user', [ProfileController::class, 'index'])->name('profile');
         Route::put('/profile',  [ProfileController::class, 'update'])->name('profile.update');
 
         // Notification mark-as-read (AJAX)
