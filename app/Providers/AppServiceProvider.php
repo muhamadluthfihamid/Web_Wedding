@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Carbon\Carbon;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,6 +21,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if ($this->app->environment('production') || request()->header('x-forwarded-proto') === 'https') {
+            URL::forceScheme('https');
+        }
+
         Paginator::useBootstrap();
         Carbon::setLocale('id');
 
