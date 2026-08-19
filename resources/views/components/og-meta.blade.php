@@ -1,5 +1,5 @@
 @php
-$userTenant = $tenant ?? (isset($infos) && $infos->first()?->user ? $infos->first()->user : Auth::user());
+$userTenant = $tenant ?? (isset($infos) && $infos->first()?->user ? $infos->first()->user : auth()->user());
 $isKhitanan = $userTenant ? $userTenant->isKhitanan() : false;
 
 $namaIstri = null;

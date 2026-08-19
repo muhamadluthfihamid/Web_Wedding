@@ -1,5 +1,4 @@
 {
-  "$schema": "https://nixpacks.com/config.json",
   "providers": ["php", "node"],
   "phases": {
     "setup": {
