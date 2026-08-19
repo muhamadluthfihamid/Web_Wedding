@@ -5,7 +5,7 @@
     <div class="flex justify-center text-indigo-600">
         <span class="text-4xl font-extrabold tracking-tight flex items-center gap-2">
             <i class="fas fa-heart text-rose-500 animate-pulse"></i>
-            <span>Luiz-Wedding</span>
+            <span>{{ $store_name ?? config('app.name', "Lu'iz-Wedding") }}</span>
         </span>
     </div>
     <h2 class="mt-6 text-center text-3xl font-bold text-slate-900 tracking-tight">Verifikasi Email Anda</h2>

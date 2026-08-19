@@ -34,9 +34,9 @@
         <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
         <!-- Brand Logo -->
-        <div class="flex items-center justify-center gap-2 mb-6 text-slate-900">
-            <i class="fas fa-heart text-rose-500 text-2xl animate-pulse"></i>
-            <span class="text-xl font-extrabold tracking-tight">Luiz-Wedding</span>
+        <div class="flex items-center justify-center gap-2 mb-6 text-slate-800">
+            <span class="text-2xl">❤️</span>
+            <span class="text-xl font-extrabold tracking-tight">{{ $store_name ?? config('app.name', "Lu'iz-Wedding") }}</span>
         </div>
 
         <!-- Error Icon Badge -->

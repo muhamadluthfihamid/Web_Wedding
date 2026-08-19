@@ -90,13 +90,13 @@
                 </tr>
                 @else
                 @php
-                $namaIstri = $info?->nama_pengantin_istri ?? 'Annisa';
-                $namaPria = $info?->nama_pengantin_pria ?? 'M luthfi';
-                $coupleName = $namaIstri . ' & ' . $namaPria;
+                $namaIstri = $info?->nama_pengantin_istri ?? '';
+                $namaPria = $info?->nama_pengantin_pria ?? '';
+                $coupleName = trim(($namaIstri && $namaPria) ? ($namaIstri . ' & ' . $namaPria) : ($namaIstri ?: $namaPria ?: (auth()->user()?->name ?? 'Pengantin')));
                 @endphp
                 @foreach ($guests as $guest)
                 @php
-                $baseUrl = url('/undangan/' . Auth::user()->getOrGenerateSlug());
+                $baseUrl = url('/undangan/' . auth()->user()->getOrGenerateSlug());
                 $weddingUrl = $baseUrl . '?to=' . rawurlencode($guest->nama);
                 $waMessage = "_Assalamualaikum Warahmatullahi Wabarakatuh_\n\n"
                 . "Tanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i *" . $guest->nama . "* untuk menghadiri acara kami.\n\n"

@@ -341,7 +341,7 @@
     <div id="logout-modal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center">
         <div class="bg-white rounded-2xl p-6 shadow-2xl border border-slate-100 w-full max-w-sm mx-4 transform transition-all duration-300">
             <h3 class="text-lg font-bold text-slate-900 mb-2">Konfirmasi Keluar</h3>
-            <p class="text-sm text-slate-500 mb-6">Apakah Anda yakin ingin keluar dari panel admin Luiz-Wedding?</p>
+            <p class="text-sm text-slate-500 mb-6">Apakah Anda yakin ingin keluar dari panel admin {{ $store_name ?? config('app.name') }}?</p>
             <div class="flex justify-end gap-3">
                 <button id="logout-cancel" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">Batal</button>
                 <a href="{{ route('logout') }}"

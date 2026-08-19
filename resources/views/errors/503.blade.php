@@ -12,5 +12,5 @@
 @section('header', 'Sistem Sedang Pemeliharaan')
 
 @section('message')
-    Layanan Luiz-Wedding saat ini sedang dalam pemeliharaan rutin untuk meningkatkan kualitas sistem. Silakan kembali beberapa saat lagi.
+    Layanan {{ $store_name ?? config('app.name', "Lu'iz-Wedding") }} saat ini sedang dalam pemeliharaan rutin untuk meningkatkan kualitas sistem. Silakan kembali beberapa saat lagi.
 @endsection

@@ -5,7 +5,7 @@
     <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
             <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">{{ __('Kelola User') }}</h1>
-            <p class="text-sm text-slate-500 mt-1">Daftar semua pengguna yang terdaftar di platform Luiz-Wedding</p>
+            <p class="text-sm text-slate-500 mt-1">Daftar semua pengguna yang terdaftar di platform {{ $store_name ?? config('app.name') }}</p>
         </div>
         <div class="flex-shrink-0">
             <a class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors" 

@@ -39,7 +39,7 @@
         {{-- Info Rekening --}}
         <div class="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
             <p class="text-sm font-bold text-amber-800 mb-2"><i class="fas fa-wallet mr-1"></i> Transfer ke:</p>
-            <p class="text-sm text-slate-700">Bank BCA – <strong>1234567890</strong> a/n <strong>Luiz Wedding</strong></p>
+            <p class="text-sm text-slate-700">Bank BCA – <strong>1234567890</strong> a/n <strong>{{ $store_name ?? config('app.name') }}</strong></p>
             <p class="text-xs text-slate-500 mt-1">Nominal transfer: <strong>{{ $package->harga_format }}</strong></p>
         </div>
 
