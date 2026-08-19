@@ -25,11 +25,12 @@ use App\Http\Controllers\{
 | PUBLIC ROUTES
 |--------------------------------------------------------------------------
 */
+
 Route::get('/', [RentalController::class, 'index'])->name('rental.index');
-Route::get('/sewa', fn () => redirect()->route('rental.index'));
+Route::get('/sewa', fn() => redirect()->route('rental.index'));
 
 Route::get('/demo', [DashboardController::class, 'index'])->name('dashboard.demo');
-Route::get('/dashboard', fn (Illuminate\Http\Request $request) => redirect()->route('dashboard.demo', $request->query()))->name('dashboard');
+Route::get('/dashboard', fn(Illuminate\Http\Request $request) => redirect()->route('dashboard.demo', $request->query()))->name('dashboard');
 
 Route::post('/wish', [WishController::class, 'storePublic'])->middleware('throttle:5,1')->name('wish.storePublic');
 
